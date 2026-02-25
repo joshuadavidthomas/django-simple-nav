@@ -15,6 +15,7 @@ from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ImproperlyConfigured
 from django.http import HttpRequest
 from django.template.loader import get_template
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls.exceptions import NoReverseMatch
 from django.utils.functional import Promise
@@ -25,6 +26,40 @@ from ._typing import EngineTemplate
 from ._typing import override
 
 logger = logging.getLogger(__name__)
+
+
+class NavItemContext(dict):
+    """A dict subclass that can render itself as HTML in templates.
+
+    Supports both dict-style access ({{ item.title }}) and self-rendering
+    ({{ item }}) in Django templates.
+    """
+
+    def __init__(self, data: dict[str, object], *, rendered: str = "") -> None:
+        super().__init__(data)
+        self._rendered = rendered
+
+    def __str__(self) -> str:
+        return self._rendered
+
+    def __html__(self) -> str:
+        return self._rendered
+
+
+def _build_renderable_context(
+    item: NavGroup | NavItem, request: HttpRequest
+) -> NavItemContext:
+    """Build a NavItemContext for a nav item, recursively wrapping children."""
+    context = item.get_context_data(request)
+    child_items = item.get_items(request)
+    if child_items is not None:
+        context["items"] = [
+            _build_renderable_context(child, request) for child in child_items
+        ]
+    rendered = mark_safe(
+        render_to_string(item.get_template_name(), context, request)
+    )
+    return NavItemContext(context, rendered=rendered)
 
 
 @dataclass(frozen=True)
@@ -43,7 +78,7 @@ class Nav:
     def get_context_data(self, request: HttpRequest) -> dict[str, object]:
         items = self.get_items(request)
         return {
-            "items": [item.get_context_data(request) for item in items],
+            "items": [_build_renderable_context(item, request) for item in items],
         }
 
     def get_items(self, request: HttpRequest) -> list[NavGroup | NavItem]:
@@ -73,6 +108,7 @@ class NavItem:
     permissions: list[str | Callable[[HttpRequest], bool]] = field(default_factory=list)
     extra_context: dict[str, object] = field(default_factory=dict)
     append_slash: bool | None = None
+    template_name: str | None = None
 
     def get_context_data(self, request: HttpRequest) -> dict[str, object]:
         context = {
@@ -92,6 +128,14 @@ class NavItem:
             **context,
             **extra_context,
         }
+
+    def get_template_name(self) -> str:
+        if self.template_name is not None:
+            return self.template_name
+        return "django_simple_nav/navitem.html"
+
+    def render(self, request: HttpRequest) -> str:
+        return str(_build_renderable_context(self, request))
 
     def get_title(self) -> str:
         return mark_safe(self.title)
@@ -228,6 +272,12 @@ class NavItem:
 @dataclass(frozen=True)
 class NavGroup(NavItem):
     items: list[NavGroup | NavItem] = field(default_factory=list)
+
+    @override
+    def get_template_name(self) -> str:
+        if self.template_name is not None:
+            return self.template_name
+        return "django_simple_nav/navgroup.html"
 
     @override
     def get_context_data(self, request: HttpRequest) -> dict[str, object]:
