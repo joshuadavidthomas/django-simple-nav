@@ -31,10 +31,14 @@ changelog.md
 
 ```{toctree}
 :hidden:
-:maxdepth: 3
+:titlesonly:
 :caption: API Reference
 
-apidocs/index.rst
+apidocs/django_simple_nav/django_simple_nav.templatetags
+apidocs/django_simple_nav/django_simple_nav.apps
+apidocs/django_simple_nav/django_simple_nav.conf
+apidocs/django_simple_nav/django_simple_nav.jinja2
+apidocs/django_simple_nav/django_simple_nav.nav
 ```
 
 ```{toctree}
