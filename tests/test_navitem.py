@@ -102,6 +102,44 @@ def test_get_url(url, append_slash, expected):
         assert rendered_url == expected
 
 
+@pytest.mark.parametrize(
+    "url,append_slash_setting,append_slash_item,expected",
+    [
+        # append_slash=None falls back to settings.APPEND_SLASH
+        ("/test", True, None, "/test/"),
+        ("/test", False, None, "/test"),
+        # append_slash=False ignores settings.APPEND_SLASH
+        ("/test", True, False, "/test"),
+        ("/test", False, False, "/test"),
+        # append_slash=True always appends
+        ("/test", True, True, "/test/"),
+        ("/test", False, True, "/test/"),
+    ],
+)
+def test_get_url_append_slash(url, append_slash_setting, append_slash_item, expected):
+    item = NavItem(title=..., url=url, append_slash=append_slash_item)
+
+    with override_settings(APPEND_SLASH=append_slash_setting):
+        assert item.get_url() == expected
+
+
+@pytest.mark.parametrize(
+    "append_slash_item,expected",
+    [
+        (None, True),
+        (False, True),
+        (True, True),
+    ],
+)
+def test_active_append_slash_item(append_slash_item, expected, rf):
+    item = NavItem(title=..., url="http://testserver/test", append_slash=append_slash_item)
+
+    req = rf.get("/test")
+
+    with override_settings(APPEND_SLASH=True):
+        assert item.get_active(req) is expected
+
+
 def test_get_url_improperly_configured():
     item = NavItem(title=..., url=None)
 
