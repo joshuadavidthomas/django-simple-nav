@@ -1,65 +1,8 @@
 # Reference
 
-## Nav
+For class attributes, method signatures, and type information, see the [API Reference](apidocs/index.rst).
 
-The top-level navigation container. Subclassed to define a navigation structure.
-
-| Attribute | Type | Description |
-|---|---|---|
-| `template_name` | `str` | Template used to render the navigation. Required. |
-| `items` | `list[NavItem \| NavGroup]` | The navigation items. Required. |
-
-**Methods:**
-
-| Method | Description |
-|---|---|
-| `render(request, template_name=None)` | Renders the navigation to an HTML string. If `template_name` is given, it overrides the class attribute. |
-| `get_items(request)` | Returns `items` filtered by each item's permissions. |
-| `get_context_data(request)` | Returns the template context: `{"items": [...]}`. |
-
-## NavItem
-
-A single navigation link.
-
-| Attribute | Type | Default | Description |
-|---|---|---|---|
-| `title` | `str` | required | Display text. Treated as safe HTML. |
-| `url` | `str \| Callable \| Promise \| None` | `None` | The URL. See [URL resolution](#url-resolution). |
-| `permissions` | `list[str \| Callable]` | `[]` | Controls visibility. See [Permission evaluation](#permission-evaluation). |
-| `extra_context` | `dict[str, object]` | `{}` | Additional template context. Cannot override `title`, `url`, `active`, or `items`. |
-| `append_slash` | `bool \| None` | `None` | Controls trailing slash. `None` defers to `settings.APPEND_SLASH`. |
-| `template_name` | `str \| None` | `None` | Template for self-rendering. Defaults to `django_simple_nav/navitem.html`. |
-
-**Methods:**
-
-| Method | Description |
-|---|---|
-| `render(request)` | Renders the item to an HTML string using its template. |
-| `get_url()` | Returns the resolved URL string. |
-| `get_active(request)` | Returns `True` if this item matches the current request. See [Active state](#active-state). |
-| `check_permissions(request)` | Returns `True` if the current user passes all permissions. |
-| `get_context_data(request)` | Returns `{"title": ..., "url": ..., "active": ..., "items": None, **extra_context}`. |
-
-## NavGroup
-
-A group of navigation items. Extends `NavItem`.
-
-| Attribute | Type | Default | Description |
-|---|---|---|---|
-| `title` | `str` | required | Display text. |
-| `url` | `str \| Callable \| Promise \| None` | `None` | Optional URL. If omitted, the group is a non-linking container. Returns `""` instead of raising an error. |
-| `items` | `list[NavItem \| NavGroup]` | `[]` | Child items. |
-| `permissions` | `list[str \| Callable]` | `[]` | Controls visibility. |
-| `extra_context` | `dict[str, object]` | `{}` | Additional template context. |
-| `append_slash` | `bool \| None` | `None` | Controls trailing slash. |
-| `template_name` | `str \| None` | `None` | Template for self-rendering. Defaults to `django_simple_nav/navgroup.html`. |
-
-**Differences from `NavItem`:**
-
-- `get_url()` returns `""` when no URL is set (instead of raising an error).
-- `get_active(request)` returns `True` if the group's own URL matches **or** any child is active (recursive).
-- `check_permissions(request)` also hides the group if it has no URL and all children are hidden by permissions.
-- `get_items(request)` returns child items filtered by permissions.
+This page documents the runtime behaviors that aren't captured in the API docs.
 
 ## Template Tag
 

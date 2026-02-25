@@ -35,7 +35,6 @@ changelog.md
 :caption: API Reference
 
 apidocs/index.rst
-apidocs/django_simple_nav/django_simple_nav.rst
 ```
 
 ```{toctree}
