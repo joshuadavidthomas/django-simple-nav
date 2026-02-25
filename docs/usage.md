@@ -1,119 +1,124 @@
 # Usage
 
-## Creating a Navigation Definition
+## Overview
 
-Define your navigation structure in a Python file. This file can be located anywhere in your Django project, provided it's importable. You can also split the navigations across multiple files if desired.
+`django-simple-nav` provides three classes for defining navigation:
 
-A good starting point is to create a single `nav.py` or `navigation.py` file in your Django project's main configuration directory (where your `settings.py` file is located).
+- **`Nav`** — The top-level container. Defines a `template_name` and a list of `items`.
+- **`NavItem`** — A single navigation link with a `title` and `url`.
+- **`NavGroup`** — A group of items. Can have its own `url` or act as a non-linking container.
 
-`django-simple-nav` provides three classes to help you define your navigation structure:
+All three are imported from `django_simple_nav.nav`:
 
-- `Nav`: The main container for a navigation structure. It has two required attributes:
-  - `template_name`: The name of the template to render the navigation structure.
-  - `items`: A list of `NavItem` or `NavGroup` objects that represent the navigation structure.
-- `NavGroup`: A container for a group of `NavItem` or `NavGroup` objects. It has two required and three optional attributes:
-  - `title`: The title of the group.
-  - `items`: A list of `NavItem` or `NavGroup`objects that represent the structure of the group.
-  - `url` (optional): The URL of the group. If not provided, the group will not be a link but just a container for the items.
-  - `permissions` (optional): A list of permissions that control the visibility of the group. These permissions can be `User` attributes (e.g. `is_authenticated`, `is_staff`, `is_superuser`), Django permissions (e.g. `myapp.django_perm`), or a callable that takes an `HttpRequest` and returns a `bool`.
-  - `extra_context` (optional): A dictionary of additional context to pass to the template when rendering the navigation.
-  - `template_name` (optional): The template used when the group renders itself via `{{ item }}`. Defaults to `django_simple_nav/navgroup.html`.
-- `NavItem`: A single navigation item. It has two required and three optional attributes:
-  - `title`: The title of the item.
-  - `url`: The URL of the item. This can be a URL string (e.g. `https://example.com/about/` or `/about/`) or a Django URL name (e.g. `about-view`).
-  - `permissions` (optional): A list of permissions that control the visibility of the item. These permissions can be `User` attributes (e.g. `is_authenticated`, `is_staff`, `is_superuser`), Django permissions (e.g. `myapp.django_perm`), or a callable that takes an `HttpRequest` and returns a `bool`.
-  - `extra_context` (optional): A dictionary of additional context to pass to the template when rendering the navigation.
-  - `append_slash` (optional): Controls whether a trailing slash is appended to the URL. Defaults to `None`, which falls back to `settings.APPEND_SLASH`. Set to `False` to prevent appending a slash, useful for URLs that must not end with a slash (e.g. Django Ninja's `/docs` or `/openapi.json`).
-  - `template_name` (optional): The template used when the item renders itself via `{{ item }}`. Defaults to `django_simple_nav/navitem.html`.
+```python
+from django_simple_nav.nav import Nav
+from django_simple_nav.nav import NavGroup
+from django_simple_nav.nav import NavItem
+```
 
-Here's an example configuration:
+## Defining a Navigation
+
+Create a subclass of `Nav` with a `template_name` and a list of `items`:
 
 ```python
 # config/nav.py
-from django.http import HttpRequest
-
 from django_simple_nav.nav import Nav
 from django_simple_nav.nav import NavGroup
 from django_simple_nav.nav import NavItem
 
 
-def simple_permissions_check(request: HttpRequest) -> bool:
-    return True
-
-
 class MainNav(Nav):
     template_name = "main_nav.html"
     items = [
-        NavItem(title="Relative URL", url="/relative-url"),
-        NavItem(title="Absolute URL", url="https://example.com/absolute-url"),
-        NavItem(title="Internal Django URL by Name", url="fake-view"),
+        NavItem(title="Home", url="/"),
+        NavItem(title="About", url="/about/"),
         NavGroup(
-            title="Group",
-            url="/group",
+            title="Resources",
+            url="/resources/",
             items=[
-                NavItem(title="Relative URL", url="/relative-url"),
-                NavItem(title="Absolute URL", url="https://example.com/absolute-url"),
-                NavItem(title="Internal Django URL by Name", url="fake-view"),
+                NavItem(title="Blog", url="/blog/"),
+                NavItem(title="Contact", url="/contact/"),
             ],
         ),
         NavGroup(
-            title="Container Group",
+            title="More",
             items=[
-                NavItem(title="Item", url="#"),
+                NavItem(title="FAQ", url="/faq/"),
             ],
-        ),
-        NavItem(
-            title="is_authenticated Item", url="#", permissions=["is_authenticated"]
-        ),
-        NavItem(title="is_staff Item", url="#", permissions=["is_staff"]),
-        NavItem(title="is_superuser Item", url="#", permissions=["is_superuser"]),
-        NavItem(
-            title="myapp.django_perm Item", url="#", permissions=["myapp.django_perm"]
-        ),
-        NavItem(
-            title="Item with callable permission",
-            url="#",
-            permissions=[simple_permissions_check],
-        ),
-        NavGroup(
-            title="Group with Extra Context",
-            items=[
-                NavItem(
-                    title="Item with Extra Context",
-                    url="#",
-                    extra_context={"foo": "bar"},
-                ),
-            ],
-            extra_context={"baz": "qux"},
         ),
     ]
 ```
 
-## Creating a Navigation Template
+A `NavGroup` with a `url` acts as both a link and a container. Without a `url`, it's just a container (useful for dropdown menus or sections).
 
-Create a template to render the navigation structure. This is a standard Django or Jinja2 template so you can use any template features you like.
+You can place this file anywhere in your Django project as long as it's importable. A common convention is a `nav.py` file next to your `settings.py`.
 
-The template will be passed an `items` variable in the context representing the structure of the navigation, containing the `NavItem` and `NavGroup` objects defined in your navigation.
+## URLs
 
-Any items with permissions attached will automatically be filtered out before rendering the template based on the request user's permissions, so you don't need to worry about that in your template.
+`NavItem` and `NavGroup` support several URL formats:
 
-Items with extra context will have that context passed to the template when rendering the navigation, which you can access directly.
+```python
+# A relative path
+NavItem(title="About", url="/about/")
 
-For example, given the above example `MainNav`, you could create a `main_nav.html` template:
+# An absolute URL
+NavItem(title="GitHub", url="https://github.com/example")
 
+# A Django URL name — resolved via reverse()
+NavItem(title="Profile", url="user-profile")
+
+# A callable — called with no arguments
+NavItem(title="Profile", url=lambda: reverse("user-profile", args=[42]))
+
+# reverse_lazy — useful at module level
+NavItem(title="Profile", url=reverse_lazy("user-profile"))
+```
+
+When a string is given, `django-simple-nav` first tries `django.urls.reverse()`. If that raises `NoReverseMatch`, the string is used as a literal URL.
+
+### Trailing Slashes
+
+By default, `django-simple-nav` respects your `APPEND_SLASH` setting. You can override this per item:
+
+```python
+# Never append a slash, regardless of APPEND_SLASH
+NavItem(title="API Docs", url="api-docs", append_slash=False)
+
+# Always append a slash
+NavItem(title="Blog", url="/blog", append_slash=True)
+```
+
+This is useful for URLs that must not end with a slash, such as Django Ninja's `/docs` or `/openapi.json`.
+
+## Writing a Navigation Template
+
+The template specified by `Nav.template_name` receives an `items` list in its context. Each item in the list exposes:
+
+| Variable | Type | Description |
+|---|---|---|
+| `title` | `SafeString` | The item's title (can contain HTML) |
+| `url` | `str` | The resolved URL (empty string for a `NavGroup` with no URL) |
+| `active` | `bool` | Whether the item matches the current request URL |
+| `items` | `list \| None` | Child items for `NavGroup`; `None` for `NavItem` |
+
+Any keys from [`extra_context`](#extra-context) are also available directly on the item.
+
+Here's a basic template:
+
+````{tab} Django
 ```htmldjango
 <!-- main_nav.html -->
 <ul>
   {% for item in items %}
     <li>
-      <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}{% if item.baz %} data-baz="{{ item.baz }}"{% endif %}>
+      <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}>
         {{ item.title }}
       </a>
       {% if item.items %}
         <ul>
           {% for subitem in item.items %}
             <li>
-              <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}{% if item.foo %} data-foo="{{ item.foo }}"{% endif %}>
+              <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}>
                 {{ subitem.title }}
               </a>
             </li>
@@ -124,22 +129,22 @@ For example, given the above example `MainNav`, you could create a `main_nav.htm
   {% endfor %}
 </ul>
 ```
+````
 
-The same template in Jinja would be written as follows:
-
-```html
+````{tab} Jinja2
+```jinja
 <!-- main_nav.html.j2 -->
 <ul>
   {% for item in items %}
     <li>
-      <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}{% if item.baz %} data-baz="{{ item.baz }}"{% endif %}>
+      <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}>
         {{ item.title }}
       </a>
       {% if item['items'] %}
         <ul>
           {% for subitem in item['items'] %}
             <li>
-              <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}{% if item.foo %} data-foo="{{ item.foo }}"{% endif %}>
+              <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}>
                 {{ subitem.title }}
               </a>
             </li>
@@ -151,95 +156,227 @@ The same template in Jinja would be written as follows:
 </ul>
 ```
 
-Note that unlike in Django templates we need to index the `items` field as a string in Jinja.
+In Jinja2 templates, use `item['items']` (bracket notation) to access child items. `item.items` in Jinja2 refers to the dict `.items()` method.
+````
 
-## Integrating Navigation in Templates
+## Using the Template Tag
 
-Use the `django_simple_nav` template tag in your Django templates (the `django_simple_nav` function in Jinja) where you want to display the navigation.
+The `django_simple_nav` template tag (or Jinja2 function) renders a navigation into your template.
 
-For example:
+### Basic usage
 
+Pass the import path to your `Nav` subclass as a string:
+
+````{tab} Django
 ```htmldjango
-<!-- base.html -->
 {% load django_simple_nav %}
 
-{% block navigation %}
 <nav>
-  {% django_simple_nav "path.to.MainNav" %}
+  {% django_simple_nav "config.nav.MainNav" %}
 </nav>
-{% endblock navigation %}
 ```
+````
 
-For Jinja:
-
+````{tab} Jinja2
 ```html
-<!-- base.html.j2 -->
-{% block navigation %}
 <nav>
-  {{ django_simple_nav("path.to.MainNav") }}
+  {{ django_simple_nav("config.nav.MainNav") }}
 </nav>
-{% endblock navigation %}
 ```
+````
 
-The template tag can either take a string representing the import path to your navigation definition or an instance of your navigation class:
+### Passing a Nav instance
+
+You can also pass a `Nav` instance from your view context:
 
 ```python
-# example_app/views.py
+# views.py
 from config.nav import MainNav
 
 
 def example_view(request):
-    return render(request, "example_app/example_template.html", {"nav": MainNav()})
+    return render(request, "example.html", {"nav": MainNav()})
 ```
 
+````{tab} Django
 ```htmldjango
-<!-- example_app/example_template.html -->
-{% extends "base.html" %}
 {% load django_simple_nav %}
 
-{% block navigation %}
 <nav>
-    {% django_simple_nav nav %}
+  {% django_simple_nav nav %}
 </nav>
-{% endblock navigation %}
 ```
+````
 
+````{tab} Jinja2
 ```html
-<!-- example_app/example_template.html.j2 -->
-{% extends "base.html" %}
-
-{% block navigation %}
 <nav>
-    {{ django_simple_nav(nav) }}
+  {{ django_simple_nav(nav) }}
 </nav>
-{% endblock navigation %}
 ```
+````
 
-Additionally, the template tag can take a second argument to specify the template to use for rendering the navigation. This is useful if you want to use the same navigation structure in multiple places but render it differently.
+### Overriding the template
 
+Pass a second argument to render the same navigation with a different template. This is useful for reusing a navigation definition in multiple places (e.g. a header and a footer):
+
+````{tab} Django
 ```htmldjango
-<!-- base.html -->
 {% load django_simple_nav %}
 
+<header>
+  {% django_simple_nav "config.nav.MainNav" %}
+</header>
+
 <footer>
-  {% django_simple_nav "path.to.MainNav" "footer_nav.html" %}
+  {% django_simple_nav "config.nav.MainNav" "footer_nav.html" %}
 </footer>
 ```
+````
 
+````{tab} Jinja2
 ```html
-<!-- base.html.j2 -->
+<header>
+  {{ django_simple_nav("config.nav.MainNav") }}
+</header>
 
 <footer>
-  {{ django_simple_nav("path.to.MainNav", "footer_nav.html.j2") }}
+  {{ django_simple_nav("config.nav.MainNav", "footer_nav.html.j2") }}
 </footer>
+```
+````
+
+## Permissions
+
+Permissions control which items are visible to the current user. Pass a list to the `permissions` parameter — **all** permissions in the list must pass for the item to be shown (AND logic).
+
+```python
+NavItem(title="Dashboard", url="/dashboard/", permissions=["is_authenticated"])
+```
+
+Four types of permissions are supported:
+
+### User attribute checks
+
+Checks a boolean attribute on `request.user`:
+
+```python
+permissions=["is_authenticated"]
+permissions=["is_staff"]
+permissions=["is_superuser"]
+```
+
+```{note}
+Superusers short-circuit all permission checks — if the user is a superuser, the item is always visible regardless of other permissions in the list.
+```
+
+### Django permissions
+
+Standard Django permission strings, checked via `user.has_perm()`:
+
+```python
+permissions=["myapp.view_post"]
+permissions=["myapp.change_post", "myapp.delete_post"]  # user must have BOTH
+```
+
+### Callable permissions
+
+Any callable that takes an `HttpRequest` and returns a `bool`:
+
+```python
+from django.http import HttpRequest
+
+
+def is_beta_user(request: HttpRequest) -> bool:
+    return hasattr(request.user, "profile") and request.user.profile.is_beta
+
+
+NavItem(title="Beta Feature", url="/beta/", permissions=[is_beta_user])
+```
+
+### Combining permissions
+
+Since permissions use AND logic, you can combine different types:
+
+```python
+# User must be authenticated AND have the Django permission
+NavItem(
+    title="Admin Panel",
+    url="/admin/",
+    permissions=["is_authenticated", "myapp.access_admin"],
+)
+```
+
+For OR logic, use a callable:
+
+```python
+def is_staff_or_beta(request: HttpRequest) -> bool:
+    return request.user.is_staff or is_beta_user(request)
+
+
+NavItem(title="Feature", url="/feature/", permissions=[is_staff_or_beta])
+```
+
+### Permissions on groups
+
+Permissions work the same way on `NavGroup`. Additionally, a `NavGroup` without a `url` will automatically hide itself if all of its children are filtered out by permissions — even if the group itself has no permissions defined.
+
+```{note}
+If `django.contrib.auth` is not in your `INSTALLED_APPS`, all permission checks are skipped and every item is shown regardless of its `permissions` list.
+```
+
+## Extra Context
+
+Pass additional data to your templates with `extra_context`:
+
+```python
+NavItem(
+    title="Blog",
+    url="/blog/",
+    extra_context={"icon": "book", "badge_count": 3},
+)
+NavGroup(
+    title="Settings",
+    items=[...],
+    extra_context={"icon": "gear"},
+)
+```
+
+Extra context keys are available directly on the item in templates:
+
+```htmldjango
+<a href="{{ item.url }}">
+  {% if item.icon %}<span class="icon-{{ item.icon }}"></span>{% endif %}
+  {{ item.title }}
+  {% if item.badge_count %}<span class="badge">{{ item.badge_count }}</span>{% endif %}
+</a>
+```
+
+The keys `title`, `url`, `active`, and `items` are reserved and cannot be overridden by `extra_context`.
+
+## Active State Detection
+
+Each item has an `active` property that indicates whether it matches the current request URL. This is determined automatically — you don't need to set it yourself.
+
+The matching rules are:
+
+- **Exact path match** — the item's resolved URL path must match the request path exactly. There is no prefix matching.
+- **Query parameters** — if the item's URL includes query parameters, those must also match exactly.
+- **Scheme and host** — for absolute URLs (e.g. `https://example.com/about/`), the scheme and host must match the request. Relative URLs only compare the path.
+
+For `NavGroup`, `active` is `True` if the group's own URL matches **or** if any of its children (recursively) are active.
+
+```htmldjango
+<a href="{{ item.url }}"{% if item.active %} aria-current="page"{% endif %}>
+  {{ item.title }}
+</a>
 ```
 
 ## Self-Rendering Items
 
-`NavItem` and `NavGroup` can render themselves, similar to how Django forms support `{{ form }}`. Instead of manually writing the HTML for each item, you can use `{{ item }}` in your template:
+`NavItem` and `NavGroup` can render themselves, similar to Django's `{{ form }}`. Instead of manually writing the HTML for each item, use `{{ item }}` in your template:
 
 ```htmldjango
-<!-- main_nav.html -->
 <nav>
   <ul>
     {% for item in items %}
@@ -249,13 +386,16 @@ Additionally, the template tag can take a second argument to specify the templat
 </nav>
 ```
 
-Each item renders using its own template — `django_simple_nav/navitem.html` for `NavItem` and `django_simple_nav/navgroup.html` for `NavGroup` by default. These are minimal, semantic HTML templates that ship with the package.
+Each item renders using its own template:
 
-You can still use `{{ item.title }}`, `{{ item.url }}`, `{{ item.active }}`, and `{{ item.items }}` in your templates — self-rendering and dict-style access work side by side.
+- `NavItem` uses `django_simple_nav/navitem.html`
+- `NavGroup` uses `django_simple_nav/navgroup.html`
+
+These are minimal, semantic HTML templates that ship with the package. Self-rendering and dict-style access (`{{ item.title }}`, `{{ item.url }}`, etc.) work side by side.
 
 ### Custom templates per item
 
-You can customize how individual items render by setting `template_name`:
+Override the template on an instance or subclass:
 
 ```python
 # Per instance
@@ -266,7 +406,7 @@ class DropdownNavGroup(NavGroup):
     template_name = "myapp/dropdown.html"
 ```
 
-You can also call `render()` directly on any item:
+You can also call `render()` directly:
 
 ```python
 item = NavItem(title="Home", url="/")
@@ -274,7 +414,17 @@ html = item.render(request)
 ```
 
 ```{note}
-The self-rendering feature requires the default templates to be discoverable by Django's template loader. If you have `APP_DIRS = True` in your `TEMPLATES` setting (the default), this works automatically. If you have `APP_DIRS = False`, you can still use dict-style access (`{{ item.title }}`, etc.) without any changes — the default templates are only loaded when `{{ item }}` is used.
+Self-rendering requires the default templates to be discoverable by Django's template loader. If you have `APP_DIRS = True` in your `TEMPLATES` setting (the default), this works automatically. If `APP_DIRS = False`, you can still use dict-style access — the default templates are only needed when `{{ item }}` is used.
 ```
 
-After configuring your navigation, you can use it across your Django project by calling the `django_simple_nav` template tag in your templates. This tag dynamically renders navigation based on your defined structure, ensuring a consistent and flexible navigation experience throughout your application.
+## Settings
+
+`django-simple-nav` has one optional setting:
+
+```python
+DJANGO_SIMPLE_NAV = {
+    "TEMPLATE_BACKEND": None,  # default
+}
+```
+
+**`TEMPLATE_BACKEND`** — The template backend to use when rendering navigations. Accepts a full backend path string (e.g. `"django.template.backends.django.DjangoTemplates"`). When set to `None` (the default), the first configured template backend is used. This is only relevant if your project has multiple template backends configured.
