@@ -3,6 +3,7 @@ from __future__ import annotations
 import pytest
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ImproperlyConfigured
+from django.test import override_settings
 
 from django_simple_nav.nav import Nav
 from django_simple_nav.nav import NavGroup
@@ -305,3 +306,96 @@ def test_navitem_custom_template(req):
     rendered = item.render(req)
     assert "custom-item" in rendered
     assert "Custom" in rendered
+
+
+# Lazy rendering regression tests
+
+
+@pytest.fixture
+def no_app_dirs_settings():
+    """TEMPLATES config with APP_DIRS=False and no path to bundled templates."""
+    from pathlib import Path
+
+    return {
+        "TEMPLATES": [
+            {
+                "BACKEND": "django.template.backends.django.DjangoTemplates",
+                "APP_DIRS": False,
+                "DIRS": [Path(__file__).parent / "templates"],
+            }
+        ],
+    }
+
+
+def test_nav_render_does_not_require_bundled_templates(req, no_app_dirs_settings):
+    """Nav.render() works with APP_DIRS=False when using dict-style access.
+
+    Regression test: rendering must not eagerly load navitem.html/navgroup.html
+    when the nav template only uses {{ item.title }}, {{ item.url }}, etc.
+    """
+    from tests.navs import DummyNav
+    from tests.utils import count_anchors
+
+    req.user = AnonymousUser()
+
+    with override_settings(**no_app_dirs_settings):
+        rendered = DummyNav().render(req)
+
+    assert count_anchors(rendered) == 7
+
+
+def test_nav_get_context_data_does_not_require_bundled_templates(
+    req, no_app_dirs_settings
+):
+    """get_context_data() builds NavItemContext without loading item templates.
+
+    Regression test: constructing the context should never trigger template
+    loading — only {{ item }} in a template should.
+    """
+
+    class TestNav(Nav):
+        template_name = "tests/dummy_nav.html"
+        items = [
+            NavItem(title="Home", url="/"),
+            NavGroup(
+                title="About",
+                items=[NavItem(title="Team", url="/team/")],
+            ),
+        ]
+
+    req.user = AnonymousUser()
+
+    with override_settings(**no_app_dirs_settings):
+        context = TestNav().get_context_data(req)
+
+    # Context was built successfully
+    assert len(context["items"]) == 2
+    assert isinstance(context["items"][0], NavItemContext)
+    assert isinstance(context["items"][1], NavItemContext)
+    # Children also wrapped
+    assert isinstance(context["items"][1]["items"][0], NavItemContext)
+    # Rendering was NOT triggered
+    assert context["items"][0]._rendered is None
+    assert context["items"][1]._rendered is None
+
+
+def test_navitemcontext_render_fails_gracefully_without_bundled_templates(
+    req, no_app_dirs_settings
+):
+    """Calling {{ item }} with APP_DIRS=False raises TemplateDoesNotExist.
+
+    This is expected — users who want {{ item }} need the templates available.
+    This test documents the behavior rather than hiding it.
+    """
+    from django.template import TemplateDoesNotExist
+
+    class TestNav(Nav):
+        template_name = "tests/dummy_nav.html"
+        items = [NavItem(title="Home", url="/")]
+
+    with override_settings(**no_app_dirs_settings):
+        context = TestNav().get_context_data(req)
+        item = context["items"][0]
+
+        with pytest.raises(TemplateDoesNotExist):
+            str(item)
