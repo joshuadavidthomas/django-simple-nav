@@ -8,6 +8,8 @@ django_versions:
 - '4.2'
 - '5.0'
 - '5.1'
+- '5.2'
+- '6.0'
 docs_domain: westervelt.dev
 github_owner: westerveltco
 github_repo: django-simple-nav
@@ -15,10 +17,10 @@ module_name: django_simple_nav
 package_description: A simple, flexible, and extensible navigation menu for Django.
 package_name: django-simple-nav
 python_versions:
-- '3.9'
 - '3.10'
 - '3.11'
 - '3.12'
 - '3.13'
+- '3.14'
 test_django_main: true
 versioning_scheme: SemVer
