@@ -114,7 +114,11 @@ class NavItem:
         if url is not None:
             parsed_url = urlparse(url)
             path = parsed_url.path
-            should_append = self.append_slash if self.append_slash is not None else settings.APPEND_SLASH
+            should_append = (
+                self.append_slash
+                if self.append_slash is not None
+                else settings.APPEND_SLASH
+            )
             if should_append and not path.endswith("/"):
                 path += "/"
             url = urlunparse(
@@ -152,7 +156,11 @@ class NavItem:
         url_path = parsed_url.path
         request_path = parsed_request.path
 
-        should_append = self.append_slash if self.append_slash is not None else settings.APPEND_SLASH
+        should_append = (
+            self.append_slash
+            if self.append_slash is not None
+            else settings.APPEND_SLASH
+        )
         if should_append:
             url_path = url_path.rstrip("/") + "/"
             request_path = request_path.rstrip("/") + "/"

@@ -132,7 +132,9 @@ def test_get_url_append_slash(url, append_slash_setting, append_slash_item, expe
     ],
 )
 def test_active_append_slash_item(append_slash_item, expected, rf):
-    item = NavItem(title=..., url="http://testserver/test", append_slash=append_slash_item)
+    item = NavItem(
+        title=..., url="http://testserver/test", append_slash=append_slash_item
+    )
 
     req = rf.get("/test")
 
