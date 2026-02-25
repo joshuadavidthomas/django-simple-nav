@@ -18,6 +18,10 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ## [Unreleased]
 
+### Added
+
+- Added `append_slash` option to `NavItem` for per-item control over trailing slash behavior.
+
 ## [0.13.0]
 
 ### Added
