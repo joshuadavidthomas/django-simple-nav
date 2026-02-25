@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
+from django.core.exceptions import ImproperlyConfigured
 
 from django_simple_nav.nav import Nav
 from django_simple_nav.nav import NavGroup
@@ -101,7 +102,7 @@ def test_navitem_render_active(rf):
 def test_navitem_render_no_url(req):
     item = NavItem(title="Label")
 
-    with pytest.raises(Exception):
+    with pytest.raises(ImproperlyConfigured):
         item.render(req)
 
 
