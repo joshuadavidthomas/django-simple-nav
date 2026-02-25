@@ -16,34 +16,52 @@ pytestmark = pytest.mark.django_db
 
 
 def test_navitemcontext_dict_access():
-    ctx = NavItemContext(
-        {"title": "Home", "url": "/", "active": True},
-        rendered="<a href='/'>Home</a>",
-    )
+    ctx = NavItemContext({"title": "Home", "url": "/", "active": True})
     assert ctx["title"] == "Home"
     assert ctx["url"] == "/"
     assert ctx["active"] is True
 
 
-def test_navitemcontext_str_renders_html():
+def test_navitemcontext_str_renders_html(req):
+    item = NavItem(title="Home", url="/")
     ctx = NavItemContext(
-        {"title": "Home"},
-        rendered="<a href='/'>Home</a>",
+        item.get_context_data(req),
+        nav_item=item,
+        request=req,
     )
-    assert str(ctx) == "<a href='/'>Home</a>"
+    rendered = str(ctx)
+    assert "<a" in rendered
+    assert "Home" in rendered
 
 
-def test_navitemcontext_html_method():
+def test_navitemcontext_html_method(req):
+    item = NavItem(title="Home", url="/")
     ctx = NavItemContext(
-        {"title": "Home"},
-        rendered="<a href='/'>Home</a>",
+        item.get_context_data(req),
+        nav_item=item,
+        request=req,
     )
-    assert ctx.__html__() == "<a href='/'>Home</a>"
+    assert ctx.__html__() == str(ctx)
 
 
 def test_navitemcontext_default_rendered():
     ctx = NavItemContext({"title": "Home"})
     assert str(ctx) == ""
+
+
+def test_navitemcontext_lazy_rendering(req):
+    """Template is not loaded until __str__ is called."""
+    item = NavItem(title="Home", url="/")
+    ctx = NavItemContext(
+        item.get_context_data(req),
+        nav_item=item,
+        request=req,
+    )
+    # _rendered is None before access
+    assert ctx._rendered is None
+    # Accessing str triggers rendering
+    str(ctx)
+    assert ctx._rendered is not None
 
 
 # NavItem.get_template_name

@@ -32,18 +32,37 @@ class NavItemContext(dict):
     """A dict subclass that can render itself as HTML in templates.
 
     Supports both dict-style access ({{ item.title }}) and self-rendering
-    ({{ item }}) in Django templates.
+    ({{ item }}) in Django templates. Rendering is lazy — the item's template
+    is only loaded and rendered when {{ item }} is used, not on construction.
     """
 
-    def __init__(self, data: dict[str, object], *, rendered: str = "") -> None:
+    def __init__(
+        self,
+        data: dict[str, object],
+        *,
+        nav_item: NavGroup | NavItem | None = None,
+        request: HttpRequest | None = None,
+    ) -> None:
         super().__init__(data)
-        self._rendered = rendered
+        self._nav_item = nav_item
+        self._request = request
+        self._rendered: str | None = None
 
     def __str__(self) -> str:
+        if self._rendered is None:
+            self._rendered = self._render()
         return self._rendered
 
     def __html__(self) -> str:
-        return self._rendered
+        return self.__str__()
+
+    def _render(self) -> str:
+        if self._nav_item is None or self._request is None:
+            return ""
+        context = dict(self)
+        return mark_safe(
+            render_to_string(self._nav_item.get_template_name(), context, self._request)
+        )
 
 
 def _build_renderable_context(
@@ -56,8 +75,7 @@ def _build_renderable_context(
         context["items"] = [
             _build_renderable_context(child, request) for child in child_items
         ]
-    rendered = mark_safe(render_to_string(item.get_template_name(), context, request))
-    return NavItemContext(context, rendered=rendered)
+    return NavItemContext(context, nav_item=item, request=request)
 
 
 @dataclass(frozen=True)
