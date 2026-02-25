@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass
 from dataclasses import field
-from typing import Callable
+from collections.abc import Callable
 from typing import cast
 from urllib.parse import parse_qs
 from urllib.parse import urlparse
