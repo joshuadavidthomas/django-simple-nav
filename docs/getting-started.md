@@ -1,8 +1,8 @@
 # Getting Started
 
-In this tutorial, we will install `django-simple-nav` and add a navigation bar to a Django project. By the end, we'll have a working nav rendered from a Python class.
+We'll add a navigation bar to a Django project — define the structure in Python, write a template, and render it.
 
-We'll assume you have an existing Django project with at least one working view and template.
+This assumes you have an existing Django project with at least one view and template.
 
 ## Install the package
 
@@ -126,7 +126,7 @@ Reload the page — the link for the current page will now have the `active` cla
 
 ## Next steps
 
-We now have a working navigation defined in Python and rendered in a template. From here, you can:
+That's it — a navigation defined in Python, rendered in a template. From here you can:
 
 - [Control which items are visible](usage.md#permissions) based on the user's permissions
 - [Pass extra data to templates](usage.md#extra-context) for icons, badges, or other custom rendering

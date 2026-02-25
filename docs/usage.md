@@ -153,7 +153,7 @@ In Jinja2 navigation templates, use bracket notation to access child items — `
 
 ## Overriding the Template at Render Time
 
-To render the same navigation with a different template, pass a second argument to the template tag:
+To render the same navigation with a different template — say, a header and a footer with different markup — pass a second argument to the template tag:
 
 ```htmldjango
 {% load django_simple_nav %}
@@ -167,11 +167,9 @@ To render the same navigation with a different template, pass a second argument 
 </footer>
 ```
 
-This is useful when you want the same items in a header and a footer but with different markup.
-
 ## Passing a Nav Instance from a View
 
-Instead of using an import path string, you can pass a `Nav` instance through your view context:
+Instead of an import path string, you can pass a `Nav` instance through your view context. This lets you construct the navigation dynamically:
 
 ```python
 # views.py
@@ -189,8 +187,6 @@ def example_view(request):
   {% django_simple_nav nav %}
 </nav>
 ```
-
-This is useful when you need to construct the navigation dynamically in your view.
 
 ## Self-Rendering Items
 
