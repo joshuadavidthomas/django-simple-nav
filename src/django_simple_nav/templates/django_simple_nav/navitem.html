@@ -1,0 +1,5 @@
+{% if url %}
+  <a href="{{ url }}"{% if active %} aria-current="page"{% endif %}>{{ title }}</a>
+{% else %}
+  <span>{{ title }}</span>
+{% endif %}
