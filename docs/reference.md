@@ -79,8 +79,8 @@ Expects `request` in the template context.
 
 See [Jinja2](usage.md#jinja2) for setup and usage.
 
-```text
-django_simple_nav(nav: str | Nav, template_name: str | None = None) -> str
+```python
+def django_simple_nav(nav: str | Nav, template_name: str | None = None) -> str: ...
 ```
 
 Same arguments as the template tag. Must be registered in the Jinja2 environment's `globals`.
