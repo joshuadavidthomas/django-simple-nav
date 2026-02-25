@@ -1,5 +1,7 @@
 # Usage
 
+These guides cover specific features of `django-simple-nav`. If you're new to the library, start with [Getting Started](getting-started.md).
+
 ## Permissions
 
 To control which navigation items a user can see, pass a `permissions` list. All permissions in the list must pass for the item to be shown.

@@ -2,7 +2,7 @@
 
 ## Nav
 
-The top-level navigation container. Subclass it to define a navigation.
+The top-level navigation container. Subclassed to define a navigation structure.
 
 | Attribute | Type | Description |
 |---|---|---|
@@ -73,9 +73,11 @@ A group of navigation items. Extends `NavItem`.
 | `nav` | yes | A dotted import path string (e.g. `"config.nav.MainNav"`) or a `Nav` instance from the template context. |
 | `template_name` | no | Override the template used to render the navigation. |
 
-Requires `request` in the template context.
+Expects `request` in the template context.
 
 ## Jinja2 Function
+
+See [Jinja2](usage.md#jinja2) for setup and usage.
 
 ```python
 django_simple_nav(nav: str | Nav, template_name: str | None = None) -> str
@@ -101,7 +103,7 @@ Each item in the list exposes:
 | `items` | `list \| None` | Child items for `NavGroup`. `None` for `NavItem`. |
 | *extra_context keys* | `object` | Any additional keys from `extra_context`. |
 
-Items are also self-rendering: `{{ item }}` renders the item using its own template.
+Items are also self-rendering: `{{ item }}` renders the item using its own template. See [Self-Rendering Items](usage.md#self-rendering-items).
 
 ## URL Resolution
 
@@ -131,6 +133,8 @@ An item is considered active when its resolved URL matches the current request.
 | `NavGroup` | Active if its own URL matches **or** any descendant is active. |
 
 ## Permission Evaluation
+
+See [Permissions](usage.md#permissions) for practical examples.
 
 Permissions are evaluated in order. **All** must pass (AND logic).
 

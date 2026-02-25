@@ -48,11 +48,7 @@ class MainNav(Nav):
     ]
 ```
 
-We've defined three things here:
-
-- **`NavItem`** creates a single link with a title and URL.
-- **`NavGroup`** groups items together — here, "Resources" contains "Blog" and "Contact".
-- **`Nav`** ties it all together with a template.
+Notice the three building blocks: a `NavItem` is a single link, a `NavGroup` holds other items together, and the `Nav` ties them to a template.
 
 ## Create the template
 
@@ -76,7 +72,7 @@ Now we need the `main_nav.html` template that our `Nav` points to. Create it in 
 </ul>
 ```
 
-The template receives an `items` list. Each item has a `title`, `url`, and optionally its own `items` (for groups). We loop through them and render links, nesting a second list for groups.
+Notice that each item has a `title` and `url`, and groups have their own nested `items`.
 
 ## Render the navigation
 
@@ -90,7 +86,7 @@ Now we can use the `django_simple_nav` template tag to render our navigation. Op
 </nav>
 ```
 
-The string `"config.nav.MainNav"` is the Python import path to our `Nav` class. The template tag imports it, processes the items, and renders the template we defined.
+The string `"config.nav.MainNav"` is the import path to our `Nav` class.
 
 Load a page in your browser — you should see an unstyled list with "Home", "About", and a "Resources" group containing "Blog" and "Contact".
 
