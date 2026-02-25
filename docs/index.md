@@ -12,15 +12,8 @@
 
 getting-started.md
 usage.md
+reference.md
 changelog.md
-```
-
-```{toctree}
-:hidden:
-:maxdepth: 3
-:caption: Reference
-
-apidocs/index.rst
 ```
 
 ```{toctree}
@@ -28,6 +21,7 @@ apidocs/index.rst
 :maxdepth: 3
 :caption: API Reference
 
+apidocs/index.rst
 apidocs/django_simple_nav/django_simple_nav.rst
 ```
 

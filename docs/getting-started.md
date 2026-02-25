@@ -1,59 +1,30 @@
 # Getting Started
 
-## Installation
+In this tutorial, we will install `django-simple-nav` and add a navigation bar to a Django project. By the end, we'll have a working nav rendered from a Python class.
 
-1. **Install the package from PyPI.**
+We'll assume you have an existing Django project with at least one working view and template.
 
-    ```bash
-    python -m pip install django-simple-nav
-    ```
+## Install the package
 
-2. **Add `django_simple_nav` to `INSTALLED_APPS`.**
+```bash
+python -m pip install django-simple-nav
+```
 
-    After installation, add `django_simple_nav` to your `INSTALLED_APPS` in your Django settings:
+Add it to `INSTALLED_APPS` in your settings:
 
-    ```python
-    INSTALLED_APPS = [
-        # ...,
-        "django_simple_nav",
-        # ...,
-    ]
-    ```
+```python
+INSTALLED_APPS = [
+    # ...,
+    "django_simple_nav",
+    # ...,
+]
+```
 
-3. **Adjust your Django project's settings.**
+That's all the configuration we need to get started.
 
-    If you plan to use the permissions feature of `django-simple-nav` to filter your navigation items based on the `request.user`, `django.contrib.auth` and `django.contrib.contenttypes` must be added to your `INSTALLED_APPS` as well:
+## Define a navigation
 
-    ```python
-    INSTALLED_APPS = [
-        # ...,
-        "django.contrib.auth",
-        "django.contrib.contenttypes",
-        # ...,
-    ]
-    ```
-
-    If you do not add `django.contrib.auth` to your `INSTALLED_APPS` and you define any permissions for your navigation items, `django-simple-nav` will simply ignore the permissions and render all items regardless of whether the permission check is `True` or `False.`
-
-### Jinja2
-
-`django-simple-nav` can be used with the `django.template.backends.jinja2.Jinja2` template engine backend.
-
-1. **Add the template function to your Jinja environment**
-
-    ```python
-    from jinja2 import Environment
-    from jinja2 import FileSystemLoader
-
-    from django_simple_nav.jinja2 import django_simple_nav
-
-    environment = Environment()
-    environment.globals.update({"django_simple_nav": django_simple_nav})
-    ```
-
-## Quick Example
-
-Define your navigation in a Python file:
+We'll create a simple navigation with a few links and a dropdown group. Create a file called `nav.py` next to your `settings.py`:
 
 ```python
 # config/nav.py
@@ -77,7 +48,55 @@ class MainNav(Nav):
     ]
 ```
 
-Create a template to render it:
+We've defined three things here:
+
+- **`NavItem`** creates a single link with a title and URL.
+- **`NavGroup`** groups items together — here, "Resources" contains "Blog" and "Contact".
+- **`Nav`** ties it all together with a template.
+
+## Create the template
+
+Now we need the `main_nav.html` template that our `Nav` points to. Create it in your templates directory:
+
+```htmldjango
+<!-- main_nav.html -->
+<ul>
+  {% for item in items %}
+    <li>
+      <a href="{{ item.url }}">{{ item.title }}</a>
+      {% if item.items %}
+        <ul>
+          {% for subitem in item.items %}
+            <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </li>
+  {% endfor %}
+</ul>
+```
+
+The template receives an `items` list. Each item has a `title`, `url`, and optionally its own `items` (for groups). We loop through them and render links, nesting a second list for groups.
+
+## Render the navigation
+
+Now we can use the `django_simple_nav` template tag to render our navigation. Open your base template (or any template) and add:
+
+```htmldjango
+{% load django_simple_nav %}
+
+<nav>
+  {% django_simple_nav "config.nav.MainNav" %}
+</nav>
+```
+
+The string `"config.nav.MainNav"` is the Python import path to our `Nav` class. The template tag imports it, processes the items, and renders the template we defined.
+
+Load a page in your browser — you should see an unstyled list with "Home", "About", and a "Resources" group containing "Blog" and "Contact".
+
+## Highlight the active page
+
+Let's improve the template to highlight whichever link matches the current page. Each item has an `active` property that's `True` when the item's URL matches the request:
 
 ```htmldjango
 <!-- main_nav.html -->
@@ -103,14 +122,15 @@ Create a template to render it:
 </ul>
 ```
 
-Use the template tag in your templates:
+Reload the page — the link for the current page will now have the `active` class. You can style it with CSS to make it stand out.
 
-```htmldjango
-{% load django_simple_nav %}
+## Next steps
 
-<nav>
-  {% django_simple_nav "config.nav.MainNav" %}
-</nav>
-```
+We now have a working navigation defined in Python and rendered in a template. From here, you can:
 
-See the [Usage](usage.md) page for the full API, including permissions, extra context, Jinja2 templates, self-rendering items, and more.
+- [Control which items are visible](usage.md#permissions) based on the user's permissions
+- [Pass extra data to templates](usage.md#extra-context) for icons, badges, or other custom rendering
+- [Use Jinja2 templates](usage.md#jinja2) instead of Django templates
+- [Let items render themselves](usage.md#self-rendering-items) for less template boilerplate
+
+See the [reference](reference.md) for full details on all attributes and behaviors.
