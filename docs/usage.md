@@ -84,7 +84,11 @@ NavGroup(
     permissions=["is_staff"],
     items=[
         NavItem(title="Users", url="/admin/users/", permissions=["auth.view_user"]),
-        NavItem(title="Settings", url="/admin/settings/", permissions=["myapp.change_settings"]),
+        NavItem(
+            title="Settings",
+            url="/admin/settings/",
+            permissions=["myapp.change_settings"],
+        ),
     ],
 )
 ```
