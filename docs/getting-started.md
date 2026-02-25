@@ -2,29 +2,11 @@
 
 We'll add a navigation bar to a Django project — define the structure in Python, write a template, and render it.
 
-This assumes you have an existing Django project with at least one view and template.
-
-## Install the package
-
-```bash
-python -m pip install django-simple-nav
-```
-
-Add it to `INSTALLED_APPS` in your settings:
-
-```python
-INSTALLED_APPS = [
-    # ...,
-    "django_simple_nav",
-    # ...,
-]
-```
-
-That's all the configuration we need to get started.
+This assumes you've already [installed](index.md#installation) the package and have a Django project with at least one view and template.
 
 ## Define a navigation
 
-We'll create a simple navigation with a few links and a dropdown group. Create a file called `nav.py` next to your `settings.py`:
+Create a file called `nav.py` next to your `settings.py`:
 
 ```python
 # config/nav.py
