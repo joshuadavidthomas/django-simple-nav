@@ -21,6 +21,12 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 ### Added
 
 - Added `append_slash` option to `NavItem` for per-item control over trailing slash behavior.
+- Support for Python 3.14.
+- Support for Django 6.0.
+
+### Removed
+
+- Dropped support for Python 3.9.
 
 ## [0.13.0]
 
@@ -204,7 +210,7 @@ Initial release! 🎉
 - Josh Thomas <josh@joshthomas.dev> (maintainer)
 - Jeff Triplett [@jefftriplett](https://github.com/jefftriplett)
 
-[unreleased]: https://github.com/westerveltco/django-simple-nav/compare/v0.12.0...HEAD
+[unreleased]: https://github.com/westerveltco/django-simple-nav/compare/v0.13.0...HEAD
 [0.1.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.1.0
 [0.2.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.2.0
 [0.3.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.3.0
