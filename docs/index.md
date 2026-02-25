@@ -19,10 +19,6 @@ If you're using the [permissions](usage.md#permissions) feature, you'll also nee
 
 For [Jinja2](usage.md#jinja2) support, see the setup guide.
 
-## Next
-
-Head to [Getting Started](getting-started.md) to build your first navigation.
-
 ```{toctree}
 :hidden:
 :maxdepth: 3
