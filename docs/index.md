@@ -1,9 +1,5 @@
 # django-simple-nav
 
-[![PyPI](https://img.shields.io/pypi/v/django-simple-nav)](https://pypi.org/project/django-simple-nav/)
-![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-simple-nav)
-![Django Version](https://img.shields.io/badge/django-4.2%20%7C%205.2%20%7C%206.0-%2344B78B?labelColor=%23092E20)
-
 ```{include} ../README.md
 :start-after: <!-- docs-intro-start -->
 :end-before: <!-- docs-intro-end -->

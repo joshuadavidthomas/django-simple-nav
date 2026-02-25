@@ -1,13 +1,12 @@
 # django-simple-nav
 
+<!-- docs-intro-start -->
 [![PyPI](https://img.shields.io/pypi/v/django-simple-nav)](https://pypi.org/project/django-simple-nav/)
 ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-simple-nav)
 ![Django Version](https://img.shields.io/badge/django-4.2%20%7C%205.2%20%7C%206.0-%2344B78B?labelColor=%23092E20)
 <!-- https://shields.io/badges -->
 <!-- django-4.2 | 5.2 | 6.0-#44B78B -->
 <!-- labelColor=%23092E20 -->
-
-<!-- docs-intro-start -->
 Define your navigation in Python, render it in templates. `django-simple-nav` handles URL resolution, active state detection, and permission filtering so your nav stays in sync with your project.
 <!-- docs-intro-end -->
 
