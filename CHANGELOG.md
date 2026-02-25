@@ -26,7 +26,6 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 ### Removed
 
 - Dropped support for Python 3.9.
-- Dropped support for Django 5.1.
 
 ## [0.13.0]
 
