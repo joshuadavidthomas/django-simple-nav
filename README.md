@@ -7,13 +7,18 @@
 <!-- django-4.2 | 5.2 | 6.0-#44B78B -->
 <!-- labelColor=%23092E20 -->
 
-`django-simple-nav` is a Python/Django application designed to simplify the integration of navigation and menu bars in your Django projects. With a straightforward API and customizable options, you can easily add and manage navigational elements in your web applications. It is designed to be simple to start with, but flexible enough to handle complex navigation structures while maintaining that same simplicity.
+<!-- docs-intro-start -->
+Define your navigation in Python, render it in templates. `django-simple-nav` handles URL resolution, active state detection, and permission filtering so your nav stays in sync with your project.
+<!-- docs-intro-end -->
 
+<!-- docs-requirements-start -->
 ## Requirements
 
 - Python 3.10, 3.11, 3.12, 3.13, 3.14
 - Django 4.2, 5.2, 6.0
+<!-- docs-requirements-end -->
 
+<!-- docs-installation-start -->
 ## Installation
 
 ```bash
@@ -29,6 +34,7 @@ INSTALLED_APPS = [
     # ...,
 ]
 ```
+<!-- docs-installation-end -->
 
 ## Getting Started
 
