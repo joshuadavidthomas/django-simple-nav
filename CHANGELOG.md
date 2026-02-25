@@ -21,6 +21,9 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 ### Added
 
 - Added `append_slash` option to `NavItem` for per-item control over trailing slash behavior.
+- `NavItem` and `NavGroup` can now render themselves via `render(request)`, enabling `{{ item }}` in templates — similar to how Django forms support `{{ form }}`. Each item can have its own `template_name` for per-item rendering customization.
+- Added `NavItemContext`, a dict subclass returned by `Nav.get_context_data()`. It supports both dict-style access (`{{ item.title }}`) and self-rendering (`{{ item }}`), so existing templates work unchanged.
+- Default templates `django_simple_nav/navitem.html` and `django_simple_nav/navgroup.html` ship with the package for use with the self-rendering feature. These are minimal, semantic HTML with `aria-current="page"` for active links.
 - Support for Python 3.14.
 - Support for Django 6.0.
 
