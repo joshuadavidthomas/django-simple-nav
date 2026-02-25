@@ -79,7 +79,7 @@ Expects `request` in the template context.
 
 See [Jinja2](usage.md#jinja2) for setup and usage.
 
-```python
+```text
 django_simple_nav(nav: str | Nav, template_name: str | None = None) -> str
 ```
 
