@@ -72,6 +72,7 @@ class NavItem:
     url: str | Callable[..., str] | Promise | None = None
     permissions: list[str | Callable[[HttpRequest], bool]] = field(default_factory=list)
     extra_context: dict[str, object] = field(default_factory=dict)
+    append_slash: bool | None = None
 
     def get_context_data(self, request: HttpRequest) -> dict[str, object]:
         context = {
@@ -113,7 +114,12 @@ class NavItem:
         if url is not None:
             parsed_url = urlparse(url)
             path = parsed_url.path
-            if settings.APPEND_SLASH and not path.endswith("/"):
+            should_append = (
+                self.append_slash
+                if self.append_slash is not None
+                else settings.APPEND_SLASH
+            )
+            if should_append and not path.endswith("/"):
                 path += "/"
             url = urlunparse(
                 (
@@ -150,7 +156,12 @@ class NavItem:
         url_path = parsed_url.path
         request_path = parsed_request.path
 
-        if settings.APPEND_SLASH:
+        should_append = (
+            self.append_slash
+            if self.append_slash is not None
+            else settings.APPEND_SLASH
+        )
+        if should_append:
             url_path = url_path.rstrip("/") + "/"
             request_path = request_path.rstrip("/") + "/"
 

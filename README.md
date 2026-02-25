@@ -94,6 +94,7 @@
       - `url`: The URL of the item. This can be a URL string (e.g. `https://example.com/about/` or `/about/`) or a Django URL name (e.g. `about-view`).
       - `permissions` (optional): A list of permissions that control the visibility of the item. These permissions can be `User` attributes (e.g. `is_authenticated`, `is_staff`, `is_superuser`), Django permissions (e.g. `myapp.django_perm`), or a callable that takes an `HttpRequest` and returns a `bool`.
       - `extra_context` (optional): A dictionary of additional context to pass to the template when rendering the navigation.
+      - `append_slash` (optional): Controls whether a trailing slash is appended to the URL. Defaults to `None`, which falls back to `settings.APPEND_SLASH`. Set to `False` to prevent appending a slash, useful for URLs that must not end with a slash (e.g. Django Ninja's `/docs` or `/openapi.json`).
 
     Here's an example configuration:
 

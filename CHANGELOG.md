@@ -20,6 +20,7 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ### Added
 
+- Added `append_slash` option to `NavItem` for per-item control over trailing slash behavior.
 - Support for Python 3.14.
 - Support for Django 6.0.
 
