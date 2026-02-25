@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import pytest
 from django.contrib.auth.models import AnonymousUser
-from django.test import override_settings
 
 from django_simple_nav.nav import Nav
 from django_simple_nav.nav import NavGroup
@@ -13,6 +12,7 @@ pytestmark = pytest.mark.django_db
 
 
 # NavItemContext
+
 
 def test_navitemcontext_dict_access():
     ctx = NavItemContext(
@@ -47,6 +47,7 @@ def test_navitemcontext_default_rendered():
 
 # NavItem.get_template_name
 
+
 def test_navitem_get_template_name_default():
     item = NavItem(title="Test", url="/test/")
     assert item.get_template_name() == "django_simple_nav/navitem.html"
@@ -68,19 +69,19 @@ def test_navitem_get_template_name_override():
 
 # NavGroup.get_template_name
 
+
 def test_navgroup_get_template_name_default():
     group = NavGroup(title="Test", items=[])
     assert group.get_template_name() == "django_simple_nav/navgroup.html"
 
 
 def test_navgroup_get_template_name_custom():
-    group = NavGroup(
-        title="Test", items=[], template_name="custom/group.html"
-    )
+    group = NavGroup(title="Test", items=[], template_name="custom/group.html")
     assert group.get_template_name() == "custom/group.html"
 
 
 # NavItem.render
+
 
 def test_navitem_render(req):
     item = NavItem(title="Home", url="/")
@@ -111,6 +112,7 @@ def test_navitem_render_returns_str(req):
 
 
 # NavGroup.render
+
 
 def test_navgroup_render(req):
     group = NavGroup(
@@ -153,6 +155,7 @@ def test_navgroup_render_no_url(req):
 
 
 # Nav.get_context_data returns NavItemContext
+
 
 def test_nav_get_context_data_returns_navitemcontext(req):
     class TestNav(Nav):
@@ -221,6 +224,7 @@ def test_nav_get_context_data_navgroup_children_are_navitemcontext(req):
 
 # Template rendering with {{ item }}
 
+
 def test_nav_render_with_self_rendering_items(req):
     """Test that {{ item }} in a template produces rendered HTML."""
 
@@ -259,6 +263,7 @@ def test_nav_render_with_self_rendering_group(req):
 
 # Backward compatibility
 
+
 def test_backward_compat_dict_access_in_template(req):
     """Existing templates using {{ item.title }} still work."""
     from tests.navs import DummyNav
@@ -270,6 +275,7 @@ def test_backward_compat_dict_access_in_template(req):
 
 
 # Custom template_name per item
+
 
 def test_navitem_custom_template(req):
     item = NavItem(

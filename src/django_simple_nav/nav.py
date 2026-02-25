@@ -56,9 +56,7 @@ def _build_renderable_context(
         context["items"] = [
             _build_renderable_context(child, request) for child in child_items
         ]
-    rendered = mark_safe(
-        render_to_string(item.get_template_name(), context, request)
-    )
+    rendered = mark_safe(render_to_string(item.get_template_name(), context, request))
     return NavItemContext(context, rendered=rendered)
 
 
