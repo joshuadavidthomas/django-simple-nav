@@ -95,9 +95,6 @@ tag = false
 version_pattern = "MAJOR.MINOR.PATCH[PYTAGNUM]"
 
 [tool.bumpver.file_patterns]
-".copier/package.yml" = [
-  'current_version: {version}'
-]
 "pyproject.toml" = [
   'version = "{version}"'
 ]
