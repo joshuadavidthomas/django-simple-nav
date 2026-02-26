@@ -21,6 +21,8 @@ Define your navigation in Python, render it in templates. `django-simple-nav` ha
 ## Installation
 
 ```bash
+uv add django-simple-nav
+# or
 python -m pip install django-simple-nav
 ```
 
@@ -104,10 +106,8 @@ The [`example`](example/) directory contains a simple Django project that demons
 ```bash
 git clone https://github.com/westerveltco/django-simple-nav
 cd django-simple-nav
-python -m venv venv
-source venv/bin/activate
-python -m pip install .
-python example/demo.py
+uv sync
+uv run example/demo.py runserver
 ```
 
 Then open your browser to `http://localhost:8000`.

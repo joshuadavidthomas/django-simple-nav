@@ -30,6 +30,7 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 ### Removed
 
 - Dropped support for Python 3.9.
+- Removed `docs`, `tests`, and `types` optional dependency groups (e.g. `pip install django-simple-nav[tests]`). These are now internal development dependencies only.
 
 ## [0.13.0]
 
