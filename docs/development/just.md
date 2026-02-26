@@ -280,7 +280,7 @@ $ just docs::build
 # Build documentation using Sphinx
 [no-cd]
 build LOCATION="docs/_build/html": cog
-    uv run --extra docs sphinx-build docs {{ LOCATION }}
+    uv run --group docs sphinx-build docs {{ LOCATION }}
 ```
 
 ### docs::serve
@@ -300,7 +300,7 @@ serve PORT="8000": cog
     if [ -f "/.dockerenv" ]; then
         HOST="0.0.0.0"
     fi
-    uv run --extra docs sphinx-autobuild docs docs/_build/html --host "$HOST" --port {{ PORT }}
+    uv run --group docs sphinx-autobuild docs docs/_build/html --host "$HOST" --port {{ PORT }}
 ```
 
 <!-- [[[end]]] -->

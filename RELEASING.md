@@ -16,12 +16,12 @@ When it comes time to cut a new release, follow these steps:
 
    The `pyproject.toml` in the base of the repository contains a `[tool.bumpver]` section that configures the `bumpver` tool to update the version number wherever it needs to be updated and to create a commit with the appropriate commit message.
 
-   `bumpver` is included as a development dependency, so you should already have it installed if you have installed the development dependencies for this project. If you do not have the development dependencies installed, you can install them with either of the following commands:
+   `bumpver` is included as a development dependency, so you should already have it installed if you have bootstrapped the project. If you have not, you can install the development dependencies with:
 
    ```shell
-   python -m pip install --editable '.[dev]'
-   # or using [just](CONTRIBUTING.md#just)
    just bootstrap
+   # or manually:
+   uv sync --frozen
    ```
 
    Then, run `bumpver` to update the version number, with the appropriate command line arguments. See the [`bumpver` documentation](https://github.com/mbarkhau/bumpver) for more details.

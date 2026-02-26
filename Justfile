@@ -1,7 +1,6 @@
 set dotenv-load := true
 set unstable := true
 
-mod copier ".just/copier.just"
 mod docs ".just/documentation.just"
 
 [private]
@@ -11,7 +10,6 @@ default:
 [private]
 fmt:
     @just --fmt
-    @just copier fmt
     @just docs fmt
 
 [private]
