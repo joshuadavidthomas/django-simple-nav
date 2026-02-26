@@ -151,7 +151,7 @@ The URLs are **named URL patterns** — `"polls:index"`, `"admin:index"`, and so
 
 The `permissions` argument controls who can see each item. When we pass `permissions=["is_staff"]`, `django-simple-nav` checks `request.user.is_staff` — if it's falsy, the item is filtered out before the template ever sees it. Same with `"is_authenticated"`. These string permissions work for any boolean attribute on the user object.
 
-For the "Log in" link, we need the opposite — show it only when the user is *not* authenticated. String permissions don't support negation, so we wrote a small `is_anonymous` function above the class. It takes the request and returns `True` when the user isn't logged in. Any callable that accepts an `HttpRequest` and returns a `bool` works as a permission. This is useful for logic that doesn't map to a simple user attribute — feature flags, query parameters, time-based conditions, whatever you need.
+For the "Log in" link, we need the opposite — show it only when the user is *not* authenticated. That's what the `is_anonymous` function above the class is for. It takes the request and returns `True` when the user isn't logged in. Any callable that accepts an `HttpRequest` and returns a `bool` works as a permission — this is the intended way to handle conditions that go beyond checking a user attribute. Inverted checks, feature flags, time-based conditions, whatever you need — write a function and pass it in.
 
 These are the three permission types: strings for user attributes (`"is_staff"`, `"is_superuser"`), strings for Django permissions (`"blog.change_post"`), and callables for custom logic. The [permissions guide](usage.md#permissions) goes deeper on all three.
 
