@@ -37,7 +37,7 @@ INSTALLED_APPS = [
 
 ## Getting Started
 
-Define your navigation in a Python file:
+Define your navigation in a Python file. `items` is what gets rendered, and `template_name` points to the template that controls the markup:
 
 ```python
 # config/nav.py
@@ -61,40 +61,40 @@ class MainNav(Nav):
     ]
 ```
 
-Create a template to render it:
+Create `main_nav.html`. The template receives the `items` defined above — each has a `title`, `url`, `active` state, and groups have nested `items`:
 
 ```htmldjango
 <!-- main_nav.html -->
-<ul>
-  {% for item in items %}
-    <li>
-      <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}>
-        {{ item.title }}
-      </a>
-      {% if item.items %}
-        <ul>
-          {% for subitem in item.items %}
-            <li>
-              <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}>
-                {{ subitem.title }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </li>
-  {% endfor %}
-</ul>
+<nav>
+  <ul>
+    {% for item in items %}
+      <li>
+        <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}>
+          {{ item.title }}
+        </a>
+        {% if item.items %}
+          <ul>
+            {% for subitem in item.items %}
+              <li>
+                <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}>
+                  {{ subitem.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
 ```
 
-Use the template tag in your templates:
+Then use the template tag wherever you want the nav to appear. The string is the import path to your `Nav` class:
 
 ```htmldjango
 {% load django_simple_nav %}
 
-<nav>
-  {% django_simple_nav "config.nav.MainNav" %}
-</nav>
+{% django_simple_nav "config.nav.MainNav" %}
 ```
 
 ## Examples

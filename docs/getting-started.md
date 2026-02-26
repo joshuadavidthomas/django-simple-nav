@@ -6,7 +6,7 @@ This assumes you've already [installed](index.md#installation) the package and h
 
 ## Define a navigation
 
-Create a file called `nav.py` next to your `settings.py`:
+Create a file called `nav.py` next to your `settings.py`. The `items` list is what gets rendered, and `template_name` points to the template that controls the markup:
 
 ```python
 # config/nav.py
@@ -34,27 +34,27 @@ Notice the three building blocks: a `NavItem` is a single link, a `NavGroup` hol
 
 ## Create the template
 
-Now we need the `main_nav.html` template that our `Nav` points to. Create it in your templates directory:
+Now we need the `main_nav.html` that our `Nav` points to. The template receives the `items` we defined above — each has a `title`, `url`, and groups have nested `items`. Create it in your templates directory:
 
 ```htmldjango
 <!-- main_nav.html -->
-<ul>
-  {% for item in items %}
-    <li>
-      <a href="{{ item.url }}">{{ item.title }}</a>
-      {% if item.items %}
-        <ul>
-          {% for subitem in item.items %}
-            <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </li>
-  {% endfor %}
-</ul>
+<nav>
+  <ul>
+    {% for item in items %}
+      <li>
+        <a href="{{ item.url }}">{{ item.title }}</a>
+        {% if item.items %}
+          <ul>
+            {% for subitem in item.items %}
+              <li><a href="{{ subitem.url }}">{{ subitem.title }}</a></li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
 ```
-
-Notice that each item has a `title` and `url`, and groups have their own nested `items`.
 
 ## Render the navigation
 
@@ -63,9 +63,7 @@ Now we can use the `django_simple_nav` template tag to render our navigation. Op
 ```htmldjango
 {% load django_simple_nav %}
 
-<nav>
-  {% django_simple_nav "config.nav.MainNav" %}
-</nav>
+{% django_simple_nav "config.nav.MainNav" %}
 ```
 
 The string `"config.nav.MainNav"` is the import path to our `Nav` class.
@@ -74,30 +72,32 @@ Load a page in your browser — you should see an unstyled list with "Home", "Ab
 
 ## Highlight the active page
 
-Let's improve the template to highlight whichever link matches the current page. Each item has an `active` property that's `True` when the item's URL matches the request:
+Each item also has an `active` property that's `True` when its URL matches the current request. Let's use it to highlight the current page:
 
 ```htmldjango
 <!-- main_nav.html -->
-<ul>
-  {% for item in items %}
-    <li>
-      <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}>
-        {{ item.title }}
-      </a>
-      {% if item.items %}
-        <ul>
-          {% for subitem in item.items %}
-            <li>
-              <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}>
-                {{ subitem.title }}
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    </li>
-  {% endfor %}
-</ul>
+<nav>
+  <ul>
+    {% for item in items %}
+      <li>
+        <a href="{{ item.url }}"{% if item.active %} class="active"{% endif %}>
+          {{ item.title }}
+        </a>
+        {% if item.items %}
+          <ul>
+            {% for subitem in item.items %}
+              <li>
+                <a href="{{ subitem.url }}"{% if subitem.active %} class="active"{% endif %}>
+                  {{ subitem.title }}
+                </a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
 ```
 
 Reload the page — the link for the current page will now have the `active` class. You can style it with CSS to make it stand out.
