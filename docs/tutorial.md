@@ -145,11 +145,15 @@ class PollsNav(Nav):
     ]
 ```
 
-Notice a few things here:
+Let's walk through what's happening here.
 
-- The URLs are **named URL patterns** (`"polls:index"`, `"admin:index"`). `django-simple-nav` resolves them automatically — no `{% url %}` tag needed.
-- **Permissions** are declared right on the item. `"is_staff"` checks `request.user.is_staff`. `"is_authenticated"` checks `request.user.is_authenticated`.
-- For "Log in", we need the *inverse* of `is_authenticated`. String permissions don't support negation, so we wrote a small `is_anonymous` function that takes the request and returns `True` when the user isn't logged in. This is the third permission type `django-simple-nav` supports: callables for any custom logic. The [permissions guide](usage.md#permissions) covers all three types.
+The URLs are **named URL patterns** — `"polls:index"`, `"admin:index"`, and so on. In our hand-written template, we had to use `{% url 'polls:index' %}` to resolve these. Here, `django-simple-nav` resolves them automatically. If a string matches a named URL pattern, it becomes the resolved path. If it doesn't match (like a literal `"/about/"` or `"#"`), it's used as-is.
+
+The `permissions` argument controls who can see each item. When we pass `permissions=["is_staff"]`, `django-simple-nav` checks `request.user.is_staff` — if it's falsy, the item is filtered out before the template ever sees it. Same with `"is_authenticated"`. These string permissions work for any boolean attribute on the user object.
+
+For the "Log in" link, we need the opposite — show it only when the user is *not* authenticated. String permissions don't support negation, so we wrote a small `is_anonymous` function above the class. It takes the request and returns `True` when the user isn't logged in. Any callable that accepts an `HttpRequest` and returns a `bool` works as a permission. This is useful for logic that doesn't map to a simple user attribute — feature flags, query parameters, time-based conditions, whatever you need.
+
+These are the three permission types: strings for user attributes (`"is_staff"`, `"is_superuser"`), strings for Django permissions (`"blog.change_post"`), and callables for custom logic. The [permissions guide](usage.md#permissions) goes deeper on all three.
 
 ### Create the nav template
 
