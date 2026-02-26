@@ -55,6 +55,10 @@ templates_path = ["_templates"]
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
+# autodoc2 generates apidocs/index.rst but the individual pages are
+# included directly in the main toctree, so suppress the warning.
+suppress_warnings = ["toc.not_included"]
+
 
 # -- MyST configuration ------------------------------------------------------
 myst_heading_anchors = 3

@@ -173,6 +173,76 @@ To render the same navigation with a different template — say, a header and a 
 </footer>
 ```
 
+## Customizing Template Resolution
+
+Under the hood, `Nav` resolves templates through two methods you can override: `get_template_name()` and `get_template()`.
+
+### Dynamic template names with `get_template_name`
+
+Override `get_template_name()` to choose which template to load at runtime:
+
+```python
+class MainNav(Nav):
+    items = [...]
+
+    def get_template_name(self) -> str:
+        if some_condition:
+            return "nav/compact.html"
+        return "nav/full.html"
+```
+
+### Full control with `get_template`
+
+`get_template()` is called by `render()` to load the template. By default it calls `get_template_name()` and loads the template from disk. You can override it to return a raw template string instead:
+
+```python
+class InlineNav(Nav):
+    items = [
+        NavItem(title="Home", url="/"),
+        NavItem(title="About", url="/about/"),
+    ]
+
+    def get_template(self, template_name=None):
+        return """
+        <nav>
+          <ul>
+            {% for item in items %}
+              <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+        """
+```
+
+When `get_template` returns a string, `render()` compiles it as an inline template using the configured template engine.
+
+You can also use this to customize how the template is loaded — for example, to add caching or fall back to a default:
+
+```python
+from django.template.loader import get_template
+
+
+class MainNav(Nav):
+    template_name = "nav/main.html"
+    items = [...]
+
+    def get_template(self, template_name=None):
+        try:
+            return super().get_template(template_name)
+        except TemplateDoesNotExist:
+            return super().get_template("nav/default.html")
+```
+
+### How it fits together
+
+When a `Nav` is rendered, the call chain is:
+
+1. **`render(request, template_name=None)`** — entry point
+2. **`get_template(template_name=None)`** — loads the template; override for inline templates or custom loading
+3. **`get_template_name()`** — returns the template name; override for dynamic selection
+
+If `template_name` is passed (e.g. from the template tag's second argument), it skips `get_template_name()` and uses that name directly.
+
 ## Passing a Nav Instance from a View
 
 Instead of an import path string, you can pass a `Nav` instance through your view context. This lets you construct the navigation dynamically:
