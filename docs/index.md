@@ -24,6 +24,7 @@ For [Jinja2](usage.md#jinja2) support, see the setup guide.
 :maxdepth: 3
 
 getting-started.md
+tutorial.md
 usage.md
 reference.md
 changelog.md
