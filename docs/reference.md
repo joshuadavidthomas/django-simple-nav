@@ -29,6 +29,19 @@ def django_simple_nav(nav: str | Nav, template_name: str | None = None) -> str:
 
 Same arguments as the template tag. Must be registered in the Jinja2 environment's `globals`.
 
+## Template Resolution
+
+`Nav.render()` resolves the template through these methods, in order:
+
+| Method | Default behavior | Override to… |
+|---|---|---|
+| `get_template(template_name=None)` | Calls `get_template_name()` and loads the template from disk. | Return an inline template string, add caching, or customize loading. |
+| `get_template_name()` | Returns `self.template_name` or raises `ImproperlyConfigured`. | Choose a template dynamically at runtime. |
+
+If `get_template()` returns a string instead of a template object, `render()` compiles it as an inline template using the configured template engine.
+
+See [Customizing Template Resolution](usage.md#customizing-template-resolution) for examples.
+
 ## Template Context
 
 The template specified by `Nav.template_name` receives:
