@@ -141,6 +141,8 @@ def types(session):
         "sync",
         "--group",
         "types",
+        "--extra",
+        "jinja2",
         "--frozen",
         "--python",
         PY_LATEST,
