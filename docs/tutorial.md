@@ -117,37 +117,6 @@ INSTALLED_APPS = [
 Create a file called `polls/nav.py`:
 
 ```python
-from django_simple_nav.nav import Nav
-from django_simple_nav.nav import NavItem
-
-
-class PollsNav(Nav):
-    template_name = "polls_nav.html"
-    items = [
-        NavItem(title="Polls", url="polls:index"),
-        NavItem(title="Admin", url="admin:index", permissions=["is_staff"]),
-        NavItem(
-            title="Log out",
-            url="admin:logout",
-            permissions=["is_authenticated"],
-        ),
-        NavItem(
-            title="Log in",
-            url="admin:login",
-            permissions=["!is_authenticated"],
-        ),
-    ]
-```
-
-Notice a few things here:
-
-- The URLs are **named URL patterns** (`"polls:index"`, `"admin:index"`). `django-simple-nav` resolves them automatically — no `{% url %}` tag needed.
-- **Permissions** are declared right on the item. `"is_staff"` checks `request.user.is_staff`. `"is_authenticated"` checks `request.user.is_authenticated`.
-- The `"!is_authenticated"` prefix inverts the check — "Log in" only appears when the user is *not* authenticated.
-
-Wait — `django-simple-nav` doesn't actually support the `!` prefix. We need a different approach for the "Log in" link. Let's use a callable permission:
-
-```python
 from django.http import HttpRequest
 
 from django_simple_nav.nav import Nav
@@ -176,7 +145,11 @@ class PollsNav(Nav):
     ]
 ```
 
-We wrote a small function `is_anonymous` that takes the request and returns `True` when the user isn't logged in. This is one of the three permission types `django-simple-nav` supports — strings for user attributes, strings for Django permissions, and callables for anything custom. The [permissions guide](usage.md#permissions) covers all three.
+Notice a few things here:
+
+- The URLs are **named URL patterns** (`"polls:index"`, `"admin:index"`). `django-simple-nav` resolves them automatically — no `{% url %}` tag needed.
+- **Permissions** are declared right on the item. `"is_staff"` checks `request.user.is_staff`. `"is_authenticated"` checks `request.user.is_authenticated`.
+- For "Log in", we need the *inverse* of `is_authenticated`. String permissions don't support negation, so we wrote a small `is_anonymous` function that takes the request and returns `True` when the user isn't logged in. This is the third permission type `django-simple-nav` supports: callables for any custom logic. The [permissions guide](usage.md#permissions) covers all three types.
 
 ### Create the nav template
 
