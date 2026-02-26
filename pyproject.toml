@@ -62,12 +62,12 @@ dependencies = [
   "django>=4.2"
 ]
 description = "A simple, flexible, and extensible navigation menu for Django."
-version = "0.13.0"
 keywords = []
 license = {file = "LICENSE"}
 name = "django-simple-nav"
 readme = "README.md"
 requires-python = ">=3.10"
+version = "0.13.0"
 
 [project.optional-dependencies]
 jinja2 = [
