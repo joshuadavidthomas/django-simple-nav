@@ -13,7 +13,7 @@ This page documents the runtime behaviors that aren't captured in the API docs.
 
 | Argument | Required | Description |
 |---|---|---|
-| `nav` | yes | A dotted import path string (e.g. `"config.nav.MainNav"`) or a `Nav` instance from the template context. |
+| `nav` | yes | A dotted import path string to a `Nav` class (e.g. `"config.nav.MainNav"`), a dotted path to a callable that accepts `request` and returns a `Nav` (e.g. `"config.nav.main_nav"`), or a `Nav` instance from the template context. See [Programmatic Navigation](usage.md#programmatic-navigation). |
 | `template_name` | no | Override the template used to render the navigation. |
 
 Expects `request` in the template context.

@@ -83,6 +83,17 @@ class Nav:
     template_name: str | None = field(init=False, default=None)
     items: list[NavGroup | NavItem] | None = field(init=False, default=None)
 
+    def __init__(
+        self,
+        *,
+        template_name: str | None = None,
+        items: list[NavGroup | NavItem] | None = None,
+    ) -> None:
+        if template_name is not None:
+            object.__setattr__(self, "template_name", template_name)
+        if items is not None:
+            object.__setattr__(self, "items", items)
+
     def render(self, request: HttpRequest, template_name: str | None = None) -> str:
         context = self.get_context_data(request)
         template = self.get_template(template_name)

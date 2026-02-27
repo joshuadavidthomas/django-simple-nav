@@ -37,13 +37,13 @@ class DjangoSimpleNavNode(template.Node):
 
     @override
     def render(self, context: Context) -> str:
-        nav = self.get_nav(context)
-        template_name = self.get_template_name(context)
         request = self.get_request(context)
+        nav = self.get_nav(context, request)
+        template_name = self.get_template_name(context)
 
         return nav.render(request, template_name)
 
-    def get_nav(self, context: Context) -> Nav:
+    def get_nav(self, context: Context, request: HttpRequest) -> Nav:
         try:
             nav: str | Nav = self.nav.resolve(context)
         except template.VariableDoesNotExist as err:
@@ -51,13 +51,25 @@ class DjangoSimpleNavNode(template.Node):
                 f"Variable does not exist: {err}"
             ) from err
 
+        if isinstance(nav, Nav):
+            return nav
+
         if isinstance(nav, str):
             try:
-                nav_instance: object = import_string(nav)()
+                imported: object = import_string(nav)
             except ImportError as err:
                 raise template.TemplateSyntaxError(
                     f"Failed to import from dotted string: {nav}"
                 ) from err
+
+            if isinstance(imported, type):
+                # Class (Nav subclass or otherwise) - instantiate with no args
+                nav_instance: object = imported()
+            elif callable(imported):
+                # Callable factory - call with request
+                nav_instance = imported(request)
+            else:
+                nav_instance = imported
         else:
             nav_instance = nav
 

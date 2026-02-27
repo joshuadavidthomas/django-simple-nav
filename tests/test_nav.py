@@ -222,3 +222,65 @@ def test_get_template_name_improperly_configured():
 
     with pytest.raises(ImproperlyConfigured):
         GetTemplateNameNav().get_template_name()
+
+
+class TestNavConstructor:
+    """Tests for direct Nav() construction (programmatic usage)."""
+
+    def test_constructor_with_items_and_template_name(self, req):
+        nav = Nav(
+            template_name="tests/dummy_nav.html",
+            items=[NavItem(title="Home", url="/")],
+        )
+
+        rendered = nav.render(req)
+
+        assert "Home" in rendered
+        assert count_anchors(rendered) == 1
+
+    def test_constructor_no_args(self):
+        nav = Nav()
+
+        assert nav.template_name is None
+        assert nav.items is None
+
+    def test_constructor_items_only(self, req):
+        nav = Nav(items=[NavItem(title="Test", url="/test/")])
+
+        items = nav.get_items(req)
+
+        assert len(items) == 1
+
+    def test_constructor_template_name_only(self):
+        nav = Nav(template_name="tests/dummy_nav.html")
+
+        assert nav.get_template_name() == "tests/dummy_nav.html"
+
+    def test_constructor_frozen(self):
+        nav = Nav(
+            template_name="tests/dummy_nav.html",
+            items=[NavItem(title="Home", url="/")],
+        )
+
+        with pytest.raises(AttributeError):
+            nav.template_name = "other.html"
+
+    def test_constructor_keyword_only(self):
+        with pytest.raises(TypeError):
+            Nav("tests/dummy_nav.html", [])
+
+    def test_subclass_not_shadowed(self):
+        """Existing subclass pattern continues to work."""
+        nav = DummyNav()
+
+        assert nav.template_name == "tests/dummy_nav.html"
+        assert nav.items is not None
+        assert len(nav.items) > 0
+
+    def test_constructor_with_conditional_items(self, req):
+        items = [NavItem(title="Home", url="/")]
+        items.append(NavItem(title="About", url="/about/"))
+
+        nav = Nav(template_name="tests/dummy_nav.html", items=items)
+
+        assert len(nav.get_items(req)) == 2

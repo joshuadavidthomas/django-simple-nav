@@ -165,3 +165,48 @@ def test_invalid_request():
 
     with pytest.raises(TemplateSyntaxError):
         template.render(Context({"request": InvalidRequest()}))
+
+
+def test_templatetag_with_callable(req):
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.dynamic_nav' %}"
+    )
+    req.user = AnonymousUser()
+
+    rendered_template = template.render(Context({"request": req}))
+
+    assert "Home" in rendered_template
+    assert "Dashboard" not in rendered_template
+
+
+def test_templatetag_with_callable_authenticated(req):
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.dynamic_nav' %}"
+    )
+    req.user = baker.make(get_user_model())
+
+    rendered_template = template.render(Context({"request": req}))
+
+    assert "Home" in rendered_template
+    assert "Dashboard" in rendered_template
+
+
+def test_templatetag_with_callable_and_template_name(req):
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.dynamic_nav' 'tests/alternate.html' %}"
+    )
+    req.user = AnonymousUser()
+
+    rendered_template = template.render(Context({"request": req}))
+
+    assert "This is an alternate template." in rendered_template
+
+
+def test_templatetag_with_bad_callable(req):
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.bad_callable' %}"
+    )
+    req.user = AnonymousUser()
+
+    with pytest.raises(TemplateSyntaxError):
+        template.render(Context({"request": req}))

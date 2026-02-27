@@ -140,3 +140,55 @@ def test_invalid_request():
 
     with pytest.raises(TemplateRuntimeError):
         template.render({"request": InvalidRequest()})
+
+
+def test_callable_dotted_string(req):
+    template = environment.from_string(
+        '{{ django_simple_nav("tests.navs.dynamic_nav") }}'
+    )
+    req.user = AnonymousUser()
+    rendered_template = template.render({"request": req})
+
+    assert "Home" in rendered_template
+    assert "Dashboard" not in rendered_template
+
+
+def test_callable_authenticated(req):
+    template = environment.from_string(
+        '{{ django_simple_nav("tests.navs.dynamic_nav") }}'
+    )
+    req.user = baker.make(get_user_model())
+    rendered_template = template.render({"request": req})
+
+    assert "Home" in rendered_template
+    assert "Dashboard" in rendered_template
+
+
+def test_callable_with_template_name(req):
+    template = environment.from_string(
+        "{{ django_simple_nav('tests.navs.dynamic_nav', 'tests/alternate.html') }}"
+    )
+    req.user = AnonymousUser()
+    rendered_template = template.render({"request": req})
+
+    assert "This is an alternate template." in rendered_template
+
+
+def test_callable_variable(req):
+    from tests.navs import dynamic_nav
+
+    template = environment.from_string("{{ django_simple_nav(nav_func) }}")
+    req.user = AnonymousUser()
+    rendered_template = template.render({"request": req, "nav_func": dynamic_nav})
+
+    assert "Home" in rendered_template
+
+
+def test_bad_callable(req):
+    template = environment.from_string(
+        '{{ django_simple_nav("tests.navs.bad_callable") }}'
+    )
+    req.user = AnonymousUser()
+
+    with pytest.raises(TemplateRuntimeError):
+        template.render({"request": req})
