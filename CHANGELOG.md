@@ -13,7 +13,7 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 ### Removed - for now removed features
 ### Fixed - for any bug fixes
 ### Security - in case of vulnerabilities
-[${version}]: https://github.com/westerveltco/django-simple-nav/releases/tag/v${version}
+[${version}]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v${version}
 -->
 
 ## [Unreleased]
@@ -51,7 +51,7 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ### New Contributors
 
-- HiPhish [@hiphish](https://github.com/hiphish) ([#170](https://github.com/westerveltco/django-simple-nav/pull/170))
+- HiPhish [@hiphish](https://github.com/hiphish) ([#170](https://github.com/joshuadavidthomas/django-simple-nav/pull/170))
 
 ## [0.12.0]
 
@@ -220,19 +220,19 @@ Initial release! 🎉
 - Josh Thomas <josh@joshthomas.dev> (maintainer)
 - Jeff Triplett [@jefftriplett](https://github.com/jefftriplett)
 
-[unreleased]: https://github.com/westerveltco/django-simple-nav/compare/v0.14.0...HEAD
-[0.1.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.1.0
-[0.2.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.2.0
-[0.3.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.3.0
-[0.4.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.4.0
-[0.5.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.5.0
-[0.5.1]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.5.1
-[0.6.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.6.0
-[0.7.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.7.0
-[0.8.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.8.0
-[0.9.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.9.0
-[0.10.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.10.0
-[0.11.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.11.0
-[0.12.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.12.0
-[0.13.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.13.0
-[0.14.0]: https://github.com/westerveltco/django-simple-nav/releases/tag/v0.14.0
+[unreleased]: https://github.com/joshuadavidthomas/django-simple-nav/compare/v0.14.0...HEAD
+[0.1.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.1.0
+[0.2.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.2.0
+[0.3.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.3.0
+[0.4.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.4.0
+[0.5.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.5.0
+[0.5.1]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.5.1
+[0.6.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.6.0
+[0.7.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.7.0
+[0.8.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.8.0
+[0.9.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.9.0
+[0.10.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.10.0
+[0.11.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.11.0
+[0.12.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.12.0
+[0.13.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.13.0
+[0.14.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.14.0

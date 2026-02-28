@@ -73,4 +73,4 @@ example/
 
 ## Documentation
 
-For the full documentation — including permissions, extra context, Jinja2 support, self-rendering items, and more — please visit the [documentation site](https://django-simple-nav.westervelt.dev/).
+For the full documentation — including permissions, extra context, Jinja2 support, self-rendering items, and more — please visit the [documentation site](https://django-simple-nav.joshthomas.dev/).

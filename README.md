@@ -104,7 +104,7 @@ Then use the template tag wherever you want the nav to appear. The string is the
 The [`example`](example/) directory contains a simple Django project that demonstrates how to use `django-simple-nav`, including navigation definitions for a few different scenarios and some popular CSS frameworks.
 
 ```bash
-git clone https://github.com/westerveltco/django-simple-nav
+git clone https://github.com/joshuadavidthomas/django-simple-nav
 cd django-simple-nav
 uv sync
 uv run example/demo.py runserver
@@ -114,7 +114,7 @@ Then open your browser to `http://localhost:8000`.
 
 ## Documentation
 
-For the full documentation — including permissions, extra context, Jinja2 support, self-rendering items, and more — please visit the [documentation site](https://django-simple-nav.westervelt.dev/).
+For the full documentation — including permissions, extra context, Jinja2 support, self-rendering items, and more — please visit the [documentation site](https://django-simple-nav.joshthomas.dev/).
 
 ## License
 

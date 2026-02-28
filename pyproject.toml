@@ -75,9 +75,9 @@ jinja2 = [
 ]
 
 [project.urls]
-Documentation = "https://django-simple-nav.westervelt.dev/"
-Issues = "https://github.com/westerveltco/django-simple-nav/issues"
-Source = "https://github.com/westerveltco/django-simple-nav"
+Documentation = "https://django-simple-nav.joshthomas.dev/"
+Issues = "https://github.com/joshuadavidthomas/django-simple-nav/issues"
+Source = "https://github.com/joshuadavidthomas/django-simple-nav"
 
 [tool.basedpyright]
 exclude = [
