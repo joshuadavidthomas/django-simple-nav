@@ -18,6 +18,11 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ## [Unreleased]
 
+### Added
+
+- Added `is_anonymous`, `is_active`, and `is_superuser` as built-in user attribute permission checks, joining the existing `is_authenticated` and `is_staff`. Previously these fell through to `user.has_perm()` which returned incorrect results.
+- Added `USER_ATTRIBUTE_PERMISSIONS` constant to `django_simple_nav.nav` containing the full set of recognized user attribute permission strings.
+
 ## [0.14.0]
 
 ### Added
