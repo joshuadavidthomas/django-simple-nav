@@ -24,6 +24,7 @@ def django_simple_nav(
     if request is None:
         raise TemplateRuntimeError("`request` not found in Jinja2 context")
 
+    nav_instance: object
     if isinstance(nav, Nav):
         nav_instance = nav
     elif isinstance(nav, str):
