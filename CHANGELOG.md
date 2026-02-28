@@ -20,6 +20,8 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ### Added
 
+- `Nav` can now be constructed directly with `template_name` and `items` keyword arguments, without needing to subclass it.
+- The `django_simple_nav` template tag and Jinja2 extension now accept factory functions. A factory receives the current request and returns a `Nav`, making it easy to build request-aware navs (e.g. based on user authentication or permissions).
 - Added `is_anonymous`, `is_active`, and `is_superuser` as built-in user attribute permission checks, joining the existing `is_authenticated` and `is_staff`.
 
 ## [0.14.0]
