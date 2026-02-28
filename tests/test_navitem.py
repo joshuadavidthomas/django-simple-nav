@@ -240,11 +240,14 @@ def test_get_items(req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], True),
         (["is_authenticated"], False),
+        (["is_active"], False),
         (["is_staff"], False),
         (["is_superuser"], False),
         (["is_authenticated", "is_staff"], False),
         (["is_authenticated", "is_superuser"], False),
+        (["is_anonymous", "is_authenticated"], False),
     ],
 )
 def test_check_permissions_anonymous(permissions, expected, req):
@@ -259,7 +262,9 @@ def test_check_permissions_anonymous(permissions, expected, req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], False),
         (["is_authenticated"], True),
+        (["is_active"], True),
         (["is_staff"], False),
         (["is_superuser"], False),
         (["is_authenticated", "is_staff"], False),
@@ -278,7 +283,9 @@ def test_check_permissions_is_authenticated(permissions, expected, req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], False),
         (["is_authenticated"], True),
+        (["is_active"], True),
         (["is_staff"], True),
         (["is_superuser"], False),
         (["is_authenticated", "is_staff"], True),
@@ -297,7 +304,9 @@ def test_check_permissions_is_staff(permissions, expected, req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], True),
         (["is_authenticated"], True),
+        (["is_active"], True),
         (["is_staff"], True),
         (["is_superuser"], True),
         (["is_authenticated", "is_staff"], True),
@@ -316,7 +325,9 @@ def test_check_permissions_is_superuser(permissions, expected, req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], False),
         (["is_authenticated"], False),
+        (["is_active"], False),
         (["is_staff"], False),
         (["is_superuser"], False),
         (["is_authenticated", "is_staff"], False),
@@ -333,7 +344,9 @@ def test_check_permissions_no_request_user(permissions, expected, req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], True),
         (["is_authenticated"], True),
+        (["is_active"], True),
         (["is_staff"], True),
         (["is_superuser"], True),
         (["is_authenticated", "is_staff"], True),
@@ -381,7 +394,9 @@ def test_check_permissions_callable_is_authenticated(is_authenticated, req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], False),
         (["is_authenticated"], True),
+        (["is_active"], True),
         (["is_staff"], False),
         (["is_superuser"], False),
         (["is_authenticated", "is_staff"], False),
@@ -414,7 +429,9 @@ def test_check_permissions_auth_permission_is_authenticated(permissions, expecte
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], False),
         (["is_authenticated"], True),
+        (["is_active"], True),
         (["is_staff"], True),
         (["is_superuser"], False),
         (["is_authenticated", "is_staff"], True),
@@ -447,7 +464,9 @@ def test_check_permissions_auth_permission_is_staff(permissions, expected, req):
     "permissions,expected",
     [
         ([], True),
+        (["is_anonymous"], True),
         (["is_authenticated"], True),
+        (["is_active"], True),
         (["is_staff"], True),
         (["is_superuser"], True),
         (["is_authenticated", "is_staff"], True),

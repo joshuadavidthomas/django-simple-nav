@@ -58,6 +58,11 @@ class PermissionsNav(Nav):
     items = [
         NavItem(title="Everyone can see this link", url="#"),
         NavItem(
+            title="You are not logged in",
+            url="#",
+            permissions=["is_anonymous"],
+        ),
+        NavItem(
             title="You are authenticated",
             url="#",
             permissions=["is_authenticated"],
