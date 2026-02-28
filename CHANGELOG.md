@@ -18,6 +18,8 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ## [Unreleased]
 
+## [0.15.0]
+
 ### Added
 
 - `Nav` can now be constructed directly with `template_name` and `items` keyword arguments, without needing to subclass it.
@@ -222,7 +224,7 @@ Initial release! 🎉
 - Josh Thomas <josh@joshthomas.dev> (maintainer)
 - Jeff Triplett [@jefftriplett](https://github.com/jefftriplett)
 
-[unreleased]: https://github.com/joshuadavidthomas/django-simple-nav/compare/v0.14.0...HEAD
+[unreleased]: https://github.com/joshuadavidthomas/django-simple-nav/compare/v0.15.0...HEAD
 [0.1.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.1.0
 [0.2.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.2.0
 [0.3.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.3.0
@@ -238,3 +240,4 @@ Initial release! 🎉
 [0.12.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.12.0
 [0.13.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.13.0
 [0.14.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.14.0
+[0.15.0]: https://github.com/joshuadavidthomas/django-simple-nav/releases/tag/v0.15.0

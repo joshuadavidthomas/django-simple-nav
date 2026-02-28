@@ -4,4 +4,4 @@ from django_simple_nav import __version__
 
 
 def test_version():
-    assert __version__ == "0.14.0"
+    assert __version__ == "0.15.0"
