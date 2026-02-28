@@ -27,6 +27,14 @@ from ._typing import override
 
 logger = logging.getLogger(__name__)
 
+USER_ATTRIBUTE_PERMISSIONS = frozenset({
+    "is_anonymous",
+    "is_authenticated",
+    "is_active",
+    "is_staff",
+    "is_superuser",
+})
+
 
 class NavItemContext(dict):
     """A dict subclass that can render itself as HTML in templates.
@@ -272,7 +280,7 @@ class NavItem:
                 break
             elif callable(perm):
                 has_perm = perm(request)
-            elif perm in ["is_authenticated", "is_staff"]:
+            elif perm in USER_ATTRIBUTE_PERMISSIONS:
                 has_perm = getattr(user, perm, False)
             else:
                 has_perm = user.has_perm(perm)

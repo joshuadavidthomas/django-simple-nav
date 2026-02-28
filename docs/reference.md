@@ -97,7 +97,7 @@ Permissions are evaluated in order. **All** must pass (AND logic).
 
 | Permission type | How it's checked |
 |---|---|
-| `"is_authenticated"`, `"is_staff"`, `"is_superuser"` | Read as a boolean attribute on `request.user`. |
+| `"is_anonymous"`, `"is_authenticated"`, `"is_active"`, `"is_staff"`, `"is_superuser"` | Read as a boolean attribute on `request.user`. |
 | `"app.codename"` (any other string) | Checked via `request.user.has_perm()`. |
 | Callable | Called with `request`; must return `bool`. |
 
