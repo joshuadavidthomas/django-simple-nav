@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from django.http import HttpRequest
+
 from django_simple_nav.nav import Nav
 from django_simple_nav.nav import NavGroup
 from django_simple_nav.nav import NavItem
@@ -49,3 +51,16 @@ class DummyNav(Nav):
             items=[NavItem(title="Test Item", url="#")],
         ),
     ]
+
+
+def dynamic_nav(request: HttpRequest) -> Nav:
+    """A callable nav factory for testing."""
+    items = [NavItem(title="Home", url="/")]
+    if hasattr(request, "user") and getattr(request.user, "is_authenticated", False):
+        items.append(NavItem(title="Dashboard", url="/dashboard/"))
+    return Nav(template_name="tests/dummy_nav.html", items=items)
+
+
+def bad_callable(request: HttpRequest) -> str:
+    """Returns something that is not a Nav (for error testing)."""
+    return "not a Nav"

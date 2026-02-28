@@ -266,6 +266,50 @@ def example_view(request):
 </nav>
 ```
 
+## Programmatic Navigation
+
+Instead of subclassing `Nav`, you can construct one directly. This is useful when you want to build the items list with conditionals or loops:
+
+```python
+from django_simple_nav.nav import Nav, NavItem
+
+items = [NavItem(title="Home", url="/")]
+if show_dashboard:
+    items.append(NavItem(title="Dashboard", url="/dashboard/"))
+
+main_nav = Nav(template_name="main_nav.html", items=items)
+```
+
+### Factory functions
+
+For conditions that depend on the request (user authentication, permissions, session data), define a callable that accepts the request and returns a `Nav`:
+
+```python
+# config/nav.py
+from django.http import HttpRequest
+
+from django_simple_nav.nav import Nav, NavItem
+
+
+def main_nav(request: HttpRequest) -> Nav:
+    items = [NavItem(title="Home", url="/")]
+    if request.user.is_authenticated:
+        items.append(NavItem(title="Dashboard", url="/dashboard/"))
+    if request.user.is_staff:
+        items.append(NavItem(title="Admin", url="/admin/"))
+    return Nav(template_name="main_nav.html", items=items)
+```
+
+Use the dotted import path in the template tag, the same way you would with a `Nav` class:
+
+```htmldjango
+{% load django_simple_nav %}
+
+{% django_simple_nav "config.nav.main_nav" %}
+```
+
+The callable receives the current `request` and its return value is rendered as the navigation. This works in both Django templates and Jinja2.
+
 ## Self-Rendering Items
 
 Instead of writing the HTML for each item manually, you can use `{{ item }}` to let items render themselves:
