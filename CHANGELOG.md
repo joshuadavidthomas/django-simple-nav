@@ -18,6 +18,10 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ## [Unreleased]
 
+### Added
+
+- Added `is_anonymous`, `is_active`, and `is_superuser` as built-in user attribute permission checks, joining the existing `is_authenticated` and `is_staff`.
+
 ## [0.14.0]
 
 ### Added

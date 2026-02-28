@@ -15,7 +15,9 @@ NavItem(title="Dashboard", url="/dashboard/", permissions=["is_authenticated"])
 Use a string matching a boolean attribute on `request.user`:
 
 ```python
+NavItem(title="Login", url="/login/", permissions=["is_anonymous"])
 NavItem(title="Dashboard", url="/dashboard/", permissions=["is_authenticated"])
+NavItem(title="Dashboard", url="/dashboard/", permissions=["is_active"])
 NavItem(title="Staff Area", url="/staff/", permissions=["is_staff"])
 ```
 
