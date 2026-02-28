@@ -52,13 +52,13 @@ When it comes time to cut a new release, follow these steps:
    bumpver update --tag=final
    ```
 
-3. Ensure the [CHANGELOG](https://github.com/westerveltco/django-simple-nav/blob/main/CHANGELOG.md) is up to date. If updates are needed, add them now in the release branch.
+3. Ensure the [CHANGELOG](https://github.com/joshuadavidthomas/django-simple-nav/blob/main/CHANGELOG.md) is up to date. If updates are needed, add them now in the release branch.
 
 4. Create a pull request from the release branch to `main`.
 
 5. Once CI has passed and all the checks are green ✅, merge the pull request.
 
-6. Draft a [new release](https://github.com/westerveltco/django-simple-nav/releases/new) on GitHub.
+6. Draft a [new release](https://github.com/joshuadavidthomas/django-simple-nav/releases/new) on GitHub.
 
    Use the version number with a leading `v` as the tag name (e.g. `v0.11.0`).
 

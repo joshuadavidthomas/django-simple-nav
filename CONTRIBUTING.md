@@ -2,7 +2,7 @@
 
 All contributions are welcome! Besides code contributions, this includes things like documentation improvements, bug reports, and feature requests.
 
-You should first check if there is a [GitHub issue](https://github.com/westerveltco/django-simple-nav/issues) already open or related to what you would like to contribute. If there is, please comment on that issue to let others know you are working on it. If there is not, please open a new issue to discuss your contribution.
+You should first check if there is a [GitHub issue](https://github.com/joshuadavidthomas/django-simple-nav/issues) already open or related to what you would like to contribute. If there is, please comment on that issue to let others know you are working on it. If there is not, please open a new issue to discuss your contribution.
 
 Not all contributions need to start with an issue, such as typo fixes in documentation or version bumps to Python or Django that require no internal code changes, but generally, it is a good idea to open an issue first.
 
@@ -10,7 +10,7 @@ We adhere to Django's Code of Conduct in all interactions and expect all contrib
 
 ## Setup
 
-The following setup steps assume you are using a Unix-like operating system, such as Linux or macOS, and that you have a [supported](https://django-simple-nav.westervelt.dev/en/latest/#requirements) version of Python installed. If you are using Windows, you will need to adjust the commands accordingly. If you do not have Python installed, you can visit [python.org](https://www.python.org/) for instructions on how to install it for your operating system.
+The following setup steps assume you are using a Unix-like operating system, such as Linux or macOS, and that you have a [supported](https://django-simple-nav.joshthomas.dev/en/latest/#requirements) version of Python installed. If you are using Windows, you will need to adjust the commands accordingly. If you do not have Python installed, you can visit [python.org](https://www.python.org/) for instructions on how to install it for your operating system.
 
 1. Fork the repository and clone it locally.
 2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/) if you don't already have it.
