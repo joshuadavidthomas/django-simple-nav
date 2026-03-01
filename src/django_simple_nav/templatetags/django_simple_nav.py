@@ -30,17 +30,14 @@ def do_django_simple_nav(parser: Parser, token: Token) -> DjangoSimpleNavNode:
                 raise template.TemplateSyntaxError(
                     f"Unknown argument to {tag_name}: {key}"
                 )
-            if template_name is not None:
-                raise template.TemplateSyntaxError(
-                    f"{tag_name} received multiple values for template_name"
-                )
-            template_name = value
         else:
-            if template_name is not None:
-                raise template.TemplateSyntaxError(
-                    f"{tag_name} received multiple values for template_name"
-                )
-            template_name = arg
+            value = arg
+
+        if template_name is not None:
+            raise template.TemplateSyntaxError(
+                f"{tag_name} received multiple values for template_name"
+            )
+        template_name = value
 
     return DjangoSimpleNavNode(nav, template_name)
 
