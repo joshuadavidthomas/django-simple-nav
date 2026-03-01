@@ -23,21 +23,19 @@ def do_django_simple_nav(parser: Parser, token: Token) -> DjangoSimpleNavNode:
     nav = args[0]
     template_name = None
 
-    for arg in args[1:]:
+    if len(args) > 2:
+        raise template.TemplateSyntaxError(f"{tag_name} received too many arguments")
+
+    if len(args) == 2:
+        arg = args[1]
         if "=" in arg:
-            key, value = arg.split("=", 1)
+            key, template_name = arg.split("=", 1)
             if key != "template_name":
                 raise template.TemplateSyntaxError(
                     f"Unknown argument to {tag_name}: {key}"
                 )
         else:
-            value = arg
-
-        if template_name is not None:
-            raise template.TemplateSyntaxError(
-                f"{tag_name} received multiple values for template_name"
-            )
-        template_name = value
+            template_name = arg
 
     return DjangoSimpleNavNode(nav, template_name)
 
