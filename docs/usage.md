@@ -146,7 +146,7 @@ You can pass a `Nav` instance or override the template, just like the Django tem
 
 ```jinja
 {{ django_simple_nav(nav) }}
-{{ django_simple_nav("config.nav.MainNav", "footer_nav.html.j2") }}
+{{ django_simple_nav("config.nav.MainNav", template_name="footer_nav.html.j2") }}
 ```
 
 In Jinja2 navigation templates, use bracket notation to access child items — `item['items']` instead of `item.items` — because `item.items` calls the dict `.items()` method in Jinja2:
@@ -161,7 +161,7 @@ In Jinja2 navigation templates, use bracket notation to access child items — `
 
 ## Overriding the Template at Render Time
 
-To render the same navigation with a different template — say, a header and a footer with different markup — pass a second argument to the template tag:
+To render the same navigation with a different template — say, a header and a footer with different markup — pass `template_name` to the template tag:
 
 ```htmldjango
 {% load django_simple_nav %}
@@ -171,7 +171,7 @@ To render the same navigation with a different template — say, a header and a 
 </header>
 
 <footer>
-  {% django_simple_nav "config.nav.MainNav" "footer_nav.html" %}
+  {% django_simple_nav "config.nav.MainNav" template_name="footer_nav.html" %}
 </footer>
 ```
 
@@ -243,7 +243,7 @@ When a `Nav` is rendered, the call chain is:
 2. **`get_template(template_name=None)`** — loads the template; override for inline templates or custom loading
 3. **`get_template_name()`** — returns the template name; override for dynamic selection
 
-If `template_name` is passed (e.g. from the template tag's second argument), it skips `get_template_name()` and uses that name directly.
+If `template_name` is passed (e.g. via `template_name="..."` in the template tag), it skips `get_template_name()` and uses that name directly.
 
 ## Passing a Nav Instance from a View
 
