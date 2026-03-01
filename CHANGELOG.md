@@ -18,6 +18,10 @@ and this project attempts to adhere to [Semantic Versioning](https://semver.org/
 
 ## [Unreleased]
 
+### Changed
+
+- The `django_simple_nav` template tag now accepts `template_name` as a keyword argument (e.g. `template_name="footer_nav.html"`). Positional usage is still supported.
+
 ## [0.15.0]
 
 ### Added
