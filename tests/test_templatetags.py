@@ -37,6 +37,17 @@ def test_templatetag_with_template_name(req):
     assert "This is an alternate template." in rendered_template
 
 
+def test_templatetag_with_template_name_kwarg(req):
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.DummyNav' template_name='tests/alternate.html' %}"
+    )
+    req.user = AnonymousUser()
+
+    rendered_template = template.render(Context({"request": req}))
+
+    assert "This is an alternate template." in rendered_template
+
+
 def test_templatetag_with_nav_instance(req):
     class PlainviewNav(DummyNav):
         items = [
@@ -61,6 +72,25 @@ def test_templatetag_with_nav_instance_and_template_name(req):
 
     template = Template(
         "{% load django_simple_nav %} {% django_simple_nav new_nav 'tests/alternate.html' %}"
+    )
+    req.user = baker.make(get_user_model(), first_name="Norwegian", last_name="Blue")
+
+    rendered_template = template.render(
+        Context({"request": req, "new_nav": DeadParrotNav()})
+    )
+
+    assert "He's pinin' for the fjords!" in rendered_template
+    assert "This is an alternate template." in rendered_template
+
+
+def test_templatetag_with_nav_instance_and_template_name_kwarg(req):
+    class DeadParrotNav(DummyNav):
+        items = [
+            NavItem(title="He's pinin' for the fjords!", url="/notlob/"),
+        ]
+
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav new_nav template_name='tests/alternate.html' %}"
     )
     req.user = baker.make(get_user_model(), first_name="Norwegian", last_name="Blue")
 
@@ -202,6 +232,17 @@ def test_templatetag_with_callable_and_template_name(req):
     assert "This is an alternate template." in rendered_template
 
 
+def test_templatetag_with_callable_and_template_name_kwarg(req):
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.dynamic_nav' template_name='tests/alternate.html' %}"
+    )
+    req.user = AnonymousUser()
+
+    rendered_template = template.render(Context({"request": req}))
+
+    assert "This is an alternate template." in rendered_template
+
+
 def test_templatetag_with_bad_callable(req):
     template = Template(
         "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.bad_callable' %}"
@@ -210,3 +251,23 @@ def test_templatetag_with_bad_callable(req):
 
     with pytest.raises(TemplateSyntaxError):
         template.render(Context({"request": req}))
+
+
+def test_templatetag_with_unknown_kwarg():
+    with pytest.raises(TemplateSyntaxError, match="Unknown argument"):
+        Template(
+            "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.DummyNav' foo='bar' %}"
+        )
+
+
+def test_templatetag_with_template_name_kwarg_variable(req):
+    template = Template(
+        "{% load django_simple_nav %} {% django_simple_nav 'tests.navs.DummyNav' template_name=my_template %}"
+    )
+    req.user = AnonymousUser()
+
+    rendered_template = template.render(
+        Context({"request": req, "my_template": "tests/alternate.html"})
+    )
+
+    assert "This is an alternate template." in rendered_template

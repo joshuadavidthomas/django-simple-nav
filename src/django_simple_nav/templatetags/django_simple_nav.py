@@ -15,17 +15,27 @@ register = template.Library()
 
 @register.tag(name="django_simple_nav")
 def do_django_simple_nav(parser: Parser, token: Token) -> DjangoSimpleNavNode:
-    try:
-        args = token.split_contents()[1:]
-        if len(args) == 0:
-            raise ValueError
-    except ValueError as err:
-        raise template.TemplateSyntaxError(
-            f"{token.split_contents()[0]} tag requires arguments"
-        ) from err
+    tag_name, *args = token.split_contents()
+
+    if not args:
+        raise template.TemplateSyntaxError(f"{tag_name} tag requires arguments")
 
     nav = args[0]
-    template_name = args[1] if len(args) > 1 else None
+    template_name = None
+
+    if len(args) > 2:
+        raise template.TemplateSyntaxError(f"{tag_name} received too many arguments")
+
+    if len(args) == 2:
+        arg = args[1]
+        if "=" in arg:
+            key, template_name = arg.split("=", 1)
+            if key != "template_name":
+                raise template.TemplateSyntaxError(
+                    f"Unknown argument to {tag_name}: {key}"
+                )
+        else:
+            template_name = arg
 
     return DjangoSimpleNavNode(nav, template_name)
 
