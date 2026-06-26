@@ -216,12 +216,19 @@ quote-style = "double"
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 fixable = ["A", "B", "C", "D", "E", "F", "I"]
-ignore = ["E501", "E741"]  # temporary
+ignore = [
+  "E501",  # temporary
+  "E741",  # temporary
+  "PT006"  # TODO: change first arg on all parametrize calls to tuples
+]
 select = [
   "B",  # flake8-bugbear
+  "DJ",  # flake8-django
   "E",  # Pycodestyle
   "F",  # Pyflakes
   "I",  # isort
+  "PT",  # flake8-pytest-style
+  "S",  # flake8-bandit
   "UP"  # pyupgrade
 ]
 unfixable = []

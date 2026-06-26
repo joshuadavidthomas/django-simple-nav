@@ -27,13 +27,15 @@ from ._typing import override
 
 logger = logging.getLogger(__name__)
 
-USER_ATTRIBUTE_PERMISSIONS = frozenset({
-    "is_anonymous",
-    "is_authenticated",
-    "is_active",
-    "is_staff",
-    "is_superuser",
-})
+USER_ATTRIBUTE_PERMISSIONS = frozenset(
+    {
+        "is_anonymous",
+        "is_authenticated",
+        "is_active",
+        "is_staff",
+        "is_superuser",
+    }
+)
 
 
 class NavItemContext(dict):
@@ -68,7 +70,7 @@ class NavItemContext(dict):
         if self._nav_item is None or self._request is None:
             return ""
         context = dict(self)
-        return mark_safe(
+        return mark_safe(  # noqa: S308
             render_to_string(self._nav_item.get_template_name(), context, self._request)
         )
 
@@ -173,7 +175,7 @@ class NavItem:
         return str(_build_renderable_context(self, request))
 
     def get_title(self) -> str:
-        return mark_safe(self.title)
+        return mark_safe(self.title)  # noqa: S308
 
     def get_url(self) -> str:
         url: str | None

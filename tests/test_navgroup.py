@@ -183,12 +183,13 @@ def test_get_url_override():
         def get_url(self):
             url = super().get_url()
             if url == "":
-                raise ValueError
+                msg = "empty URL"
+                raise ValueError(msg)
             return url
 
     group = GetURLNavGroup(title=..., items=[...])
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="empty URL"):
         group.get_url()
 
 

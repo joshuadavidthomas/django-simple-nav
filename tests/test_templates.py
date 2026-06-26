@@ -122,4 +122,4 @@ def test_get_template_engine_app_setting_invalid():
     with pytest.raises(ImproperlyConfigured) as exc_info:
         get_template_engine()
 
-        assert "Invalid `TEMPLATE_BACKEND` for a template engine" in exc_info
+    assert "Invalid `TEMPLATE_BACKEND` for a template engine" in str(exc_info.value)
