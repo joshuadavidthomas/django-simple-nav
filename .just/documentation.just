@@ -1,4 +1,4 @@
-set unstable := true
+set unstable
 
 justfile := justfile_directory() + "/.just/documentation.just"
 

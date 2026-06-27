@@ -188,7 +188,7 @@ def test_get_url_override():
 
     group = GetURLNavGroup(title=..., items=[...])
 
-    with pytest.raises(ValueError):
+    with pytest.raises(ValueError, match="^$"):
         group.get_url()
 
 

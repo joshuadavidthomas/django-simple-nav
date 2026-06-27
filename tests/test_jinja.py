@@ -73,8 +73,8 @@ def test_templatetag_with_template_name_on_nav_instance(req):
 
 def test_templatetag_with_no_arguments(req):
     req.user = AnonymousUser()
+    template = environment.from_string("{{ django_simple_nav() }}")
     with pytest.raises(TypeError):
-        template = environment.from_string("{{ django_simple_nav() }}")
         template.render({"request": req})
 
 

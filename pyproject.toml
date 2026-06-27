@@ -218,10 +218,23 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 fixable = ["A", "B", "C", "D", "E", "F", "I"]
 ignore = ["E501", "E741"]  # temporary
 select = [
+  "A",  # flake8-builtins
   "B",  # flake8-bugbear
+  "C4",  # flake8-comprehensions
+  "DJ",  # flake8-django
+  "DTZ",  # flake8-datetimez
   "E",  # Pycodestyle
   "F",  # Pyflakes
+  "G",  # flake8-logging-format
   "I",  # isort
+  "LOG",  # flake8-logging
+  "PIE",  # flake8-pie
+  "PT",  # flake8-pytest-style
+  "RET",  # flake8-return
+  "RUF100",  # unused noqa
+  "S",  # flake8-bandit
+  "SIM",  # flake8-simplify
+  "T20",  # flake8-print
   "UP"  # pyupgrade
 ]
 unfixable = []
@@ -232,8 +245,12 @@ known-first-party = ["django_simple_nav"]
 required-imports = ["from __future__ import annotations"]
 
 [tool.ruff.lint.per-file-ignores]
-# Tests can use magic values, assertions, and relative imports
-"tests/**/*" = ["PLR2004", "S101", "TID252"]
+# Sphinx expects a `copyright` setting in conf.py.
+"docs/conf.py" = ["A001"]
+# Tests can use magic values, assertions, relative imports, and pytest's legacy string parameter lists.
+"tests/**/*" = ["PLR2004", "PT006", "S101", "TID252"]
+# Tests intentionally use Jinja2 without autoescape to exercise template behavior.
+"tests/jinja2/environment.py" = ["S701"]
 
 [tool.ruff.lint.pyupgrade]
 # Preserve types, even if a file imports `from __future__ import annotations`.
