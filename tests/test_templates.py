@@ -58,9 +58,8 @@ def test_get_template_engine_no_engine():
     ],
 )
 def test_get_template_engine_multiple(templates, expected, caplog):
-    with override_settings(TEMPLATES=templates):
-        with caplog.at_level("WARNING"):
-            engine = get_template_engine()
+    with override_settings(TEMPLATES=templates), caplog.at_level("WARNING"):
+        engine = get_template_engine()
 
     assert engine.name == expected
     assert "Multiple `BACKEND` defined for a template engine." in caplog.text
@@ -122,4 +121,4 @@ def test_get_template_engine_app_setting_invalid():
     with pytest.raises(ImproperlyConfigured) as exc_info:
         get_template_engine()
 
-        assert "Invalid `TEMPLATE_BACKEND` for a template engine" in exc_info
+    assert "Invalid `TEMPLATE_BACKEND` for a template engine" in str(exc_info.value)

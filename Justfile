@@ -1,5 +1,5 @@
-set dotenv-load := true
-set unstable := true
+set dotenv-load
+set unstable
 
 mod docs ".just/documentation.just"
 
