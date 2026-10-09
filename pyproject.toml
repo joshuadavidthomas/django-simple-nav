@@ -36,7 +36,7 @@ types = [
 
 [project]
 authors = [
-  {name = "Josh Thomas", email = "josh@joshthomas.dev"}
+  { name = "Josh Thomas", email = "josh@joshthomas.dev" }
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
@@ -61,7 +61,7 @@ dependencies = [
 ]
 description = "A simple, flexible, and extensible navigation menu for Django."
 keywords = []
-license = {file = "LICENSE"}
+license = { file = "LICENSE" }
 name = "django-simple-nav"
 readme = "README.md"
 requires-python = ">=3.10"
