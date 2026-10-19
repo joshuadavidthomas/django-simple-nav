@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# Prepares a fresh Amp orb for this repository. Runs once per fresh orb and again on stale
+# snapshots, so every step must be idempotent and cheap when already done.
+set -euo pipefail
+
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
+
+step() {
+  local name="$1"
+  shift
+  local start=$SECONDS
+  echo "==> $name"
+  "$@"
+  echo "<== $name ($((SECONDS - start))s)"
+}
+
+export PATH="$HOME/.local/bin:$PATH"
+
+install_uv() {
+  if ! command -v uv >/dev/null 2>&1; then
+    curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
+  fi
+  uv --version
+}
+
+install_just() {
+  if ! command -v just >/dev/null 2>&1; then
+    uv tool install rust-just
+  fi
+  just --version
+}
+
+# nox runs the test matrix against every supported Python (see PY_VERSIONS in noxfile.py).
+install_pythons() {
+  uv python install 3.10 3.11 3.12 3.13 3.14
+}
+
+# uv.lock is gitignored, so resolve a local lock before syncing the default dev environment.
+sync_deps() {
+  uv sync --all-extras
+}
+
+# Pre-build the default nox test venv (Python 3.10, Django 5.2) so `just test` starts warm.
+warm_nox() {
+  uv run nox --session test --install-only
+}
+
+warm_pre_commit() {
+  uv run --with pre-commit-uv pre-commit install-hooks
+}
+
+step "uv" install_uv
+step "just" install_just
+step "python interpreters" install_pythons
+step "uv sync" sync_deps
+step "nox test session" warm_nox
+step "pre-commit hooks" warm_pre_commit

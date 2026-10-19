@@ -192,3 +192,6 @@ mediafiles/
 apidocs/
 
 uv.lock
+
+# Amp orb portals
+.amp/portals/*
